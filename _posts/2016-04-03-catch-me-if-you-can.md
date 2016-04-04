@@ -16,11 +16,11 @@ Validations:    **50**
 
 ## Solution
 
-We were given a file called [usb.pcap](../ressources/2016/ndh/catch_me_if_you_can/usb.pcap).
+We were given a file called [usb.pcap](/ressources/2016/ndh/catch_me_if_you_can/usb.pcap).
 After digging around the file for a while it appears that it's a USB transfer of
 several files.
 
-We wrote a simple [python script](../ressources/2016/ndh/catch_me_if_you_can/extract_files.py) to extract the different blob with [scapy](http://www.secdev.org/projects/scapy/).
+We wrote a simple [python script](/ressources/2016/ndh/catch_me_if_you_can/extract_files.py) to extract the different blob with [scapy](http://www.secdev.org/projects/scapy/).
 
 ```python
 #!/usr/bin/env python2
@@ -35,7 +35,7 @@ for i,p in enumerate(pcap):
 
 After analyzing those files, we found that there is **two** files in the transfer.
 To reconstruct the two files, we simply use odd and even files for each. Here is
-the [python script](../ressources/2016/ndh/catch_me_if_you_can/prepare_file.py) to do it:
+the [python script](/ressources/2016/ndh/catch_me_if_you_can/prepare_file.py) to do it:
 
 ```python
 #!/usr/bin/env python2
@@ -85,7 +85,7 @@ files1.ods: OpenDocument Spreadsheet
 After opening the first file with [Libreoffice](https://fr.libreoffice.org/) we
 were greated by:
 
-![screenshot file1](../ressources/2016/ndh/catch_me_if_you_can/screen_file1.png, "Screen file 1")
+![screenshot file1](/ressources/2016/ndh/catch_me_if_you_can/screen_file1.png, "Screen file 1")
 
 Fun isn't it...
 
@@ -93,7 +93,7 @@ Digging in the 2nd file is more profitable, it show us a sort of table with
 alphabetic and letter:
 
 
-![screenshot file2](../ressources/2016/ndh/catch_me_if_you_can/screen_file2.png, "Screen file 2")
+![screenshot file2](/ressources/2016/ndh/catch_me_if_you_can/screen_file2.png, "Screen file 2")
 
 if you scroll to the **1048576** line vertical and to the top right most, yes there are
 serious... you'll found a "code":
@@ -101,5 +101,5 @@ serious... you'll found a "code":
 
 Using this code with the weird alphbetical table give us the flag.
 Challenges ressources are available in [ressources
-folder](../ressources/2016/ndh/catch_me_if_you_can/)
+folder](/ressources/2016/ndh/catch_me_if_you_can/)
 
