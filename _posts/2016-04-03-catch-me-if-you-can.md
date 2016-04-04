@@ -9,7 +9,9 @@
 ## Details
 
 Points:         **100**
+
 Category:       **forensic**
+
 Validations:    **50**
 
 ## Solution
