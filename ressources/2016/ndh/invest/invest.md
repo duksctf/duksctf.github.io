@@ -9,15 +9,15 @@ Points : 50
 
 ## Solution
 
-The URL give the file [invest.pcapng](invest.pcapng). With Wireshark we could extract several files with *File->Export Objects->HTML*. There was a *key.txt* file which contains in a binary chain. Interpreting the chain in ASCII shows that it does not look really random:
+The challenge provided us with [invest.pcapng](invest.pcapng), a packet capture for us to analyze. With Wireshark we could extract several files with *File->Export Objects->HTML*. Within the pcap is a file called 'key.txt', which contains a binary chain. Interpreting the chain in ASCII showed that it does not look really random:
 
 `G^cnI9^GG9G9G9G9^cnInI95^c95nInIG^95nI^cG^95^c^c^cG^^cnIG^95G^nI^c^cnI^c^c95G^^c^c^cG^G^^cnInI^c`
 
-There were several pictures among them one seems interesting:
+The pcap also contains several pictures; one in particular seems interesting:
 
 ![schematics](12767348_10208095326368148_1014857467_n.jpeg)
 
-We notice that this function takes 8 bit as input and output one bit. Among the downloaded they were 81 files with their name starting by *encrypt*. They were base64 encoded. We merge, decoded them and obtained a file which start with the string ``Salted__`. 
+We noticed that this function takes 8 bit as input and output one bit. Among the downloaded they were 81 files with their name starting by *encrypt*. They are base64 encoded. We merged, decoded them and obtained a file which start with the string ``Salted__`. 
 
 ```
 >binwalk merged.bin 
@@ -56,7 +56,7 @@ for b in l:
     c2 = (not b2) and (not b1)
     c3 = b0 and b1
     c4 = b5 ^ b6
-    c5 = (not b1) ^ (not b7)   
+    c5 = (not b1) ^ (not b7)
 
     d1 = c1 and (not b3)
     d2 = c2 and (not b3)
@@ -81,7 +81,7 @@ password = binascii.unhexlify(hex(int(s,2))[2:])
 print(password)
 ```
 
-We passed the string contains in *key.txt* to the script and we obtain the string "4Ukz95F2YqPi". The string is 12-byte long. We did not know any cipher using such length for the key so we thought about a password. Since the guy is paranoid he should have used a strong block cipher. We started with AES-128:
+We passed the string contains in *key.txt* to the script and we obtained the string "4Ukz95F2YqPi". The string is 12-byte long. We did not know any cipher using such length for the key so we thought about a password. Since the guy is paranoid he would have used a strong block cipher. We started with AES-128:
 
 ```
 openssl enc -aes128 -in merged.bin -out merged.out -d  -k 4Ukz95F2YqPi -p
