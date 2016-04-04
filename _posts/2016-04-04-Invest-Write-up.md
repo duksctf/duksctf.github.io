@@ -101,9 +101,11 @@ key=215350CECF73E345AF6894267B335AA07413F91D4B87534B953CC656476C3107
 iv =C2E8D310CAD4C7A8CC4CD67BA81E672F
 ```
 
-The file was decrypted properly. The decrypted file is a [Word file](/ressources/2016/ndh/invest/merged.doc) which shows a picture. We unzip the file a run a grep on the repository.
+The file was decrypted properly. The decrypted file is a [Word file](/ressources/2016/ndh/invest/merged.doc) which shows a picture. We unzip the file a run a grep on the repository:
+
 ```
 grep "NDH" -r merged.out_FILES/
 NDH[59rRS57bd5WH8RxgPbRS27q89a5bWrjL]
 ```
+
 It revealed the flag. However we could have open the file and move or delete the image to display the flag. 
