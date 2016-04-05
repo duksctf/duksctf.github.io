@@ -26,7 +26,9 @@ and then manually copied the RSA-2048 modulus, equal to
 The second step was to recover part of the private key from the network capture, doing first
 <pre><code>tcpflow -r attack_log.pcap</code></pre>
 in order to extract the reassembled content of the TCP session. Then the only thing we had to do was to lazily look for a prime number that factored the modulus in this dump, namely in the file <code>192.168.105.160.00443-192.168.105.001.40572</code> (obviously, the private key parts needed to be in the data sent from the server to the client). To do this I wrote the following script:
-<pre><code>from binascii import hexlify
+
+{% highlight python2%}
+from binascii import hexlify
 from pyprimes import isprime
 import sys
 
@@ -45,7 +47,10 @@ for i in range(0, len(d) - 128):
         continue
     q = n / p
     if q * p == n:
-        print 'factor found: ', p</code></pre>
+        print 'factor found: ', p
+        
+{% endhighlight %]
+
 which after a few seconds found the prime factor
 <pre><code>162800346840897460776468813649884118748559125156676009651818806350253200631182399318398587210444328205266057474343495440234163281091254518673126741452325095375914485073473011961346710968389549502805048181472650809456469931148070907250674606060817482309018037066114703019632076408777754991395159477650420299677</code></pre>
 Note the <code>reverse()</code> in the code above, to parse numbers in little-endian rather than big-endian order. We first overlooked this detail and lost almost an hour...
