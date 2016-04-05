@@ -9,7 +9,12 @@ twitter_username: duksctf
 github_username:  duksctf
 
 # Build settings
+
 markdown: kramdown
+kramdown:
+  input: GFM # Enable GitHub Flavored Markdown (fenced code blocks)
+  hard_wrap: false
+highlighter: rouge
 
 # Permalinks
 permalink: /blog/:year/:month/:day/:title
