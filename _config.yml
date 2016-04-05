@@ -2,11 +2,11 @@
 title: duksctf
 email: redacted
 description: > # this means to ignore newlines until "baseurl:"
-  This blog is for hosting writeup from CTF we play in.
+ This blog is for hosting writeup from CTF we play in.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "http://duksctf.github.io" # the base hostname & protocol for your site
 twitter_username: duksctf
-github_username:  duksctf
+github_username: duksctf
 
 # Build settings
 
@@ -14,11 +14,11 @@ markdown: kramdown
 kramdown:
   input: GFM # Enable GitHub Flavored Markdown (fenced code blocks)
   hard_wrap: false
-highlighter: rouge
+  highlighter: rouge
 
 # Permalinks
 permalink: /blog/:year/:month/:day/:title
 
 # gems
 gems:
-  - jekyll-sitemap
+- jekyll-sitemap
