@@ -7,7 +7,7 @@ date: 2016-03-21
 
 The [Insomni'hack](http://insomnihack.ch/) conference and CTF happened last Friday in Geneva, as usual it was a lot of fun. And as usual, Dragon Sector won the CTF, beating a few other world-class teams that made the trip for this on-site jeopardy CTF. About 80 teams registered, and the final ranking looks as follows for the first 25 teams:
 
-![Ranking](/resources/2016/inso/ranking.png)
+![Ranking](/resources/2016/insomnihack/pcapbleeding/ranking.png) 
 
 There was only one challenge in the crypto category, "pcapbleeding". With such a name, the vulnerability was obvious: [Heartbleed](http://heartbleed.com/). We were given three files
 <ul>
@@ -80,5 +80,5 @@ knqPghny1B3tfhbT9ow4jtrlm8jiumhVwg44gQhmcSSiRCMBwfs=
 -----END RSA PRIVATE KEY-----</code></pre>
 I used some script found online to make the conversion. Loading it in Wireshark to decrypt the encrypted capture then directly gave the flag: <code>INS={HB_pr1v4te_key5_le3k}</code>
 
-![wireshark](/resources/2016/inso/wireshark.png)
+![wireshark](/resources/2016/insomnihack/pcapbleeding/wireshark.png)
 
