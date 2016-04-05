@@ -18,3 +18,7 @@ github_username:  duksctf
 markdown: kramdown
 kramdown:
   input: GFM
+
+gems:
+    - jekyll-sitemap
+    - jekyll-feed
