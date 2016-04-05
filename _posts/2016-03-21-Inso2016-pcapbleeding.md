@@ -27,7 +27,7 @@ The second step was to recover part of the private key from the network capture,
 <pre><code>tcpflow -r attack_log.pcap</code></pre>
 in order to extract the reassembled content of the TCP session. Then the only thing we had to do was to lazily look for a prime number that factored the modulus in this dump, namely in the file <code>192.168.105.160.00443-192.168.105.001.40572</code> (obviously, the private key parts needed to be in the data sent from the server to the client). To do this I wrote the following script:
 
-{% highlight python2%}
+{% highlight %}
 from binascii import hexlify
 from pyprimes import isprime
 import sys
