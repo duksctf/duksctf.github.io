@@ -8,3 +8,5 @@ kramdown:
 
 # Permalinks
 permalink:        pretty
+gems:
+  - jekyll-sitemap
