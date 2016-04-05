@@ -21,4 +21,6 @@ permalink: /blog/:year/:month/:day/:title
 
 # gems
 gems:
-- jekyll-sitemap
+ - jekyll-coffeescript
+ - jekyll-paginate
+ - jekyll-sitemap
