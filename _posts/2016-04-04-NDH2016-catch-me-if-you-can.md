@@ -4,21 +4,21 @@ title: "Nuit du hack quals 2016 - Catch me if you can"
 date: 2016-04-04
 ---
 
-## Description
+### Description
 
-> We managed to infect the computer of a target. We recorded all packets
-> transferred over the USB port, but there is something unusual. We need them to
-> be sorted to get the juicy secret.
+*We managed to infect the computer of a target. We recorded all packets
+transferred over the USB port, but there is something unusual. We need them to
+be sorted to get the juicy secret.*
 
-## Details
+<!--more-->
 
-Points:         **100**
+### Details
 
-Category:       **forensic**
+Points:         100
+Category:       forensic
+Validations:    50
 
-Validations:    **50**
-
-## Solution
+### Solution
 
 We were given a file called [usb.pcap](/resources/2016/ndh/catch_me_if_you_can/usb.pcap).
 After digging around the file for a while it appears that it's a USB transfer of

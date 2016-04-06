@@ -4,6 +4,15 @@ title: Insomni'hack 2016 - Pcapbleeding
 date: 2016-03-21
 ---
 
+### Description
+
+*Finally, somebody has read our 2014 log files. We think an attack 
+occurred on our HTTPS server but we don't know if they succeed in 
+stealing valuable
+information. Some confidential data pass through this SSL channels so we
+hope it's not broken*
+
+<!--more-->
 
 The [Insomni'hack](http://insomnihack.ch/) conference and CTF happened last Friday in Geneva, as usual it was a lot of fun. And as usual, Dragon Sector won the CTF, beating a few other world-class teams that made the trip for this on-site jeopardy CTF. About 80 teams registered, and the final ranking looks as follows for the first 25 teams:
 
@@ -17,14 +26,20 @@ There was only one challenge in the crypto category, "pcapbleeding". With such a
 </ul>
 I worked on this challenge with my teammate Brecht Wyseur from the duks team. Here's how we solved it:
 
-<!--more-->
-
 Our first step was to look at the certificate and extract its public key.We did this with the command
-<pre><code>openssl x509 -in hb_scrt.crt -text</code></pre>
+
+```bash
+openssl x509 -in hb_scrt.crt -text
+```
+
 and then manually copied the RSA-2048 modulus, equal to
-<pre><code>0x00bf683ed2cc8c1f259bbf6428904cd5c32ae974e9bb1b52e39a31451923b4dbbd9502e34fec0a0441da9cc8ebdb2970ee9f945d4b01f1971ea3512f63c37f696c68bd34f552d9f2a92fa03a7e5965f2f9d80134c9dea1aa94732a506a114bc6160ab8d99c875922037a0bf39345d4ed0502270d3774f160163716db5c3f393c1d68f4a00c8c301b38ff9ba053eb9b7e1d60968761e6d3134abae2e04afc94069facd0566d93f11998be89ea4ac03f169c2f1da87ca15e997a4acf67c64052768ba00881f6288ddbb2bb6815935315ef52db939dd3e1cb39eafb188985ca445cee8b7f26a179770dca2f36d3d35bb7faef629d392a943a5cbad41d2ffabf4e1d61</code></pre>
+
+```bash
+0x00bf683ed2cc8c1f259bbf6428904cd5c32ae974e9bb1b52e39a31451923b4dbbd9502e34fec0a0441da9cc8ebdb2970ee9f945d4b01f1971ea3512f63c37f696c68bd34f552d9f2a92fa03a7e5965f2f9d80134c9dea1aa94732a506a114bc6160ab8d99c875922037a0bf39345d4ed0502270d3774f160163716db5c3f393c1d68f4a00c8c301b38ff9ba053eb9b7e1d60968761e6d3134abae2e04afc94069facd0566d93f11998be89ea4ac03f169c2f1da87ca15e997a4acf67c64052768ba00881f6288ddbb2bb6815935315ef52db939dd3e1cb39eafb188985ca445cee8b7f26a179770dca2f36d3d35bb7faef629d392a943a5cbad41d2ffabf4e1d61
+```
+
 The second step was to recover part of the private key from the network capture, doing first
-<pre><code>tcpflow -r attack_log.pcap</code></pre>
+```tcpflow -r attack_log.pcap```
 in order to extract the reassembled content of the TCP session. Then the only thing we had to do was to lazily look for a prime number that factored the modulus in this dump, namely in the file <code>192.168.105.160.00443-192.168.105.001.40572</code> (obviously, the private key parts needed to be in the data sent from the server to the client). To do this I wrote the following script:
 
 ```python
@@ -51,11 +66,16 @@ for i in range(0, len(d) - 128):
 ```
 
 which after a few seconds found the prime factor
-<pre><code>162800346840897460776468813649884118748559125156676009651818806350253200631182399318398587210444328205266057474343495440234163281091254518673126741452325095375914485073473011961346710968389549502805048181472650809456469931148070907250674606060817482309018037066114703019632076408777754991395159477650420299677</code></pre>
-Note the <code>reverse()</code> in the code above, to parse numbers in little-endian rather than big-endian order. We first overlooked this detail and lost almost an hour...
+
+```bash
+162800346840897460776468813649884118748559125156676009651818806350253200631182399318398587210444328205266057474343495440234163281091254518673126741452325095375914485073473011961346710968389549502805048181472650809456469931148070907250674606060817482309018037066114703019632076408777754991395159477650420299677
+```
+Note the ```reverse()``` in the code above, to parse numbers in little-endian rather than big-endian order. We first overlooked this detail and lost almost an hour...
 
 To decrypt the encrypted data, you could just use Wireshark. It takes the private key in PEM format, which in this case yields
-<pre><code>-----BEGIN RSA PRIVATE KEY-----
+
+```
+-----BEGIN RSA PRIVATE KEY-----
 MIIEogIBAAKCAQEAry8C7aRdXa8bbb48yc0KVJ0QJZBVgnMK+yXznOdPFr71Gqun
 4CM2F0aAwNpP6Ff+aQeSaWGKLoibEELWWE7BxrKUPui5fChqd7ftvi47lxUrT6cZ
 7AkrigL7dmdXV53D/8uv6pmOtZs2T4rCSMRyLm88x642hvOP3r7XjZEeDbexvGul
@@ -81,8 +101,10 @@ FwI+eXOgNbAVvYVjf5/Xb98BkLetgDbxpqKZKfdsGBqtV4C+WyU3feAeOc8RI7dq
 QDzxAoGAEF1LwoWPh94YVJs/f1Tjk3euX5YjXLj5StbsV2DOA9wtqL5DPrL9JmpY
 gXsNl4AeeDwSlAkh8+KXKJ+AZVvGjQnIwU8jAvtee3cOYhvHUAXDB1b+yLe6Z2q4
 knqPghny1B3tfhbT9ow4jtrlm8jiumhVwg44gQhmcSSiRCMBwfs=
------END RSA PRIVATE KEY-----</code></pre>
-I used some script found online to make the conversion. Loading it in Wireshark to decrypt the encrypted capture then directly gave the flag: <code>INS={HB_pr1v4te_key5_le3k}</code>
+-----END RSA PRIVATE KEY-----
+```
+
+I used some script found online to make the conversion. Loading it in Wireshark to decrypt the encrypted capture then directly gave the flag: ```INS={HB_pr1v4te_key5_le3k}```
 
 ![wireshark](/resources/2016/insomnihack/pcapbleeding/wireshark.png)
 

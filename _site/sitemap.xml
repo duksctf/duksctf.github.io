@@ -1,44 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    
-    <url>
-        <loc>http://duksctf.github.io/blog/2016/04/04/NDH2016-invest</loc>
-    </url>
-    
-    <url>
-        <loc>http://duksctf.github.io/blog/2016/04/04/NDH2016-catch-me-if-you-can</loc>
-    </url>
-    
-    <url>
-        <loc>http://duksctf.github.io/blog/2016/03/21/Inso2016-pcapbleeding</loc>
-    </url>
-    
-    <url>
-        <loc>http://duksctf.github.io/blog/2016/03/21/Inso2016-microwave</loc>
-    </url>
-    
-
-    
-    
-    
-    
-    
-    <url>
-        <loc>http://duksctf.github.io/</loc>
-    </url>
-    
-    
-    
-    
-    
-    <url>
-        <loc>http://duksctf.github.io/about/</loc>
-    </url>
-    
-    
-    
-    
-    
-    
-    
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+<loc>/NDH2016-invest/</loc>
+<lastmod>2016-04-04T00:00:00+02:00</lastmod>
+</url>
+<url>
+<loc>/NDH2016-catch-me-if-you-can/</loc>
+<lastmod>2016-04-04T00:00:00+02:00</lastmod>
+</url>
+<url>
+<loc>/Inso2016-pcapbleeding/</loc>
+<lastmod>2016-03-21T00:00:00+01:00</lastmod>
+</url>
+<url>
+<loc>/Inso2016-microwave/</loc>
+<lastmod>2016-03-21T00:00:00+01:00</lastmod>
+</url>
+<url>
+<loc>/404/</loc>
+</url>
+<url>
+<loc>/about/</loc>
+</url>
+<url>
+<loc>/</loc>
+</url>
 </urlset>

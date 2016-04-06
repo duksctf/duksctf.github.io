@@ -6,9 +6,11 @@ date: 2016-04-04
 
 ## Description
 
-> Description
-> of theover
-> task
+*Description
+of theover
+task*
+
+<!--more-->
 
 ## Details
 
