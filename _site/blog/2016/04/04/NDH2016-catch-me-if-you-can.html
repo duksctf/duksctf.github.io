@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Nuit du hack quals 2016 - Catch me if you can</title>
+  <meta name="description" content="Description">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://duksctf.github.io/blog/2016/04/04/NDH2016-catch-me-if-you-can">
+  <link rel="alternate" type="application/rss+xml" title="duksctf" href="http://duksctf.github.io/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">duksctf</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="/about/">about</a>
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Nuit du hack quals 2016 - Catch me if you can</h1>
+    <p class="post-meta"><time datetime="2016-04-04T00:00:00+02:00" itemprop="datePublished">Apr 4, 2016</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <h2 id="description">Description</h2>
+
+<blockquote>
+  <p>We managed to infect the computer of a target. We recorded all packets<br />
+transferred over the USB port, but there is something unusual. We need them to<br />
+be sorted to get the juicy secret.</p>
+</blockquote>
+
+<h2 id="details">Details</h2>
+
+<p>Points:         <strong>100</strong></p>
+
+<p>Category:       <strong>forensic</strong></p>
+
+<p>Validations:    <strong>50</strong></p>
+
+<h2 id="solution">Solution</h2>
+
+<p>We were given a file called <a href="/resources/2016/ndh/catch_me_if_you_can/usb.pcap">usb.pcap</a>.<br />
+After digging around the file for a while it appears that it’s a USB transfer of<br />
+several files.</p>
+
+<p>We wrote a simple <a href="/resources/2016/ndh/catch_me_if_you_can/extract_files.py">python script</a> to extract the different blob with <a href="http://www.secdev.org/projects/scapy/">scapy</a>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/usr/bin/env python2</span>
+
+<span class="kn">from</span> <span class="nn">scapy.all</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">pcap</span> <span class="o">=</span> <span class="n">rdpcap</span><span class="p">(</span><span class="s">"usb.pcap"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pcap</span><span class="p">):</span>
+	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+		<span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s">"wb"</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">load</span><span class="p">[</span><span class="mi">27</span><span class="p">:])</span>
+</code></pre>
+</div>
+
+<p>After analyzing those files, we found that there is <strong>two</strong> files in the transfer.<br />
+To reconstruct the two files, we simply use odd and even files for each. Here is<br />
+the <a href="/resources/2016/ndh/catch_me_if_you_can/prepare_file.py">python script</a> to do it:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"> <span class="c">#!/usr/bin/env python2</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">listdir</span>
+
+<span class="n">working_dir</span> <span class="o">=</span> <span class="s">"working"</span>
+
+<span class="n">folder</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">files1</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">files2</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">listdir</span><span class="p">(</span><span class="n">working_dir</span><span class="p">):</span>
+    <span class="n">folder</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+<span class="n">folder</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">folder</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">files2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">files1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+<span class="c">#reorder the blob</span>
+<span class="n">files1</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+<span class="n">files2</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+<span class="c"># create the files1</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">"files1.ods"</span><span class="p">,</span> <span class="s">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">final_files1</span><span class="p">:</span>
+
+    <span class="c"># clean the sample</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">files1</span><span class="p">:</span>
+        <span class="n">final_files1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mh">0x708</span><span class="p">))</span>
+
+
+<span class="c"># create the files2</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">"files2.ods"</span><span class="p">,</span> <span class="s">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">final_files2</span><span class="p">:</span>
+
+    <span class="c"># clean the sample</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">files2</span><span class="p">:</span>
+        <span class="n">final_files2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mh">0x708</span><span class="p">))</span> </code></pre></figure>
+
+<p>After running our script we were left with two files:<br />
+<code class="highlighter-rouge">
+file files1.ods 
+files1.ods: OpenDocument Spreadsheet
+</code><br />
+After opening the first file with <a href="https://fr.libreoffice.org/">Libreoffice</a> we<br />
+were greeted by:</p>
+
+<p><img src="/resources/2016/ndh/catch_me_if_you_can/screen_file1.png" width="800" /></p>
+
+<p>Fun isn’t it…</p>
+
+<p>Digging in the 2nd file is more profitable, it show us a sort of table with<br />
+alphabetic and letter:</p>
+
+<p><img src="/resources/2016/ndh/catch_me_if_you_can/screen_file2.png" width="800" /></p>
+
+<p>if you scroll to the <strong>1048576</strong> line vertical and to the top right most, yes there are<br />
+serious… you’ll found a “code”:<br />
+&gt; g6d5g5f2b6g5d3e4d4b3c5b6k2j5j5g4l2</p>
+
+<p>Using this code with the weird alphbetical table give us the flag: <strong>ndh[wh3re1sw@lly]</strong>.</p>
+
+<p>Challenges resources are available in the <a href="https://github.com/duksctf/duksctf.github.io/tree/master/resources/2016/ndh/catch_me_if_you_can">resources<br />
+folder</a></p>
+
+
+  </div>
+
+</article>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">duksctf</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>duksctf</li>
+          <li><a href="mailto:redacted@redacted.com">redacted@redacted.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/duksctf"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">duksctf</span></a>
+
+          </li>
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>This blog is for hosting writeup from CTF we play in.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

