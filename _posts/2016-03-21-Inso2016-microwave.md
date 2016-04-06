@@ -4,8 +4,6 @@ title: Insomni'hack 2016 - Microwave
 date: 2016-03-21
 ---
 
-### Description
-
 This is a write-up for the <em>microwave</em> pwn of <a href="https://insomnihack.ch/">Insomni'hack</a> CTF (first published on <a href="https://deadc0de.re/articles/microwave-write-up.html">deadc0de.re</a>).
 
 <!--more-->
