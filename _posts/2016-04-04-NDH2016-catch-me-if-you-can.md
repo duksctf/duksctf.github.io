@@ -22,7 +22,9 @@ be sorted to get the juicy secret.*
 ### Details
 
 Points:         100
+
 Category:       forensic
+
 Validations:    50
 
 ### Solution
