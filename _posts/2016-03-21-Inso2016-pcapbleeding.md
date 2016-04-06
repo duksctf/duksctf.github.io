@@ -4,11 +4,11 @@ title: Insomni'hack 2016 - Pcapbleeding
 date: 2016-03-21
 ---
 
-We got a pcap, the problem was obvious from the challenge name
+*We got a pcap, the problem was obvious from the challenge name
 (heartbleed). Given the RSA-2048 pubkey we sought for prime numbers of
 around 1024 bits in the pcaps, then reconstructed the private key and
 used it to decrypt the encrypted part of the session, which contained
-the flag.
+the flag.*
 
 <!--more-->
 
