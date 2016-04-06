@@ -4,7 +4,7 @@ title: "Full name of the CTF Year - Name of the task"
 date: 2016-04-04
 ---
 
-## Description
+### Description
 
 *Description
 of theover
@@ -12,15 +12,13 @@ task*
 
 <!--more-->
 
-## Details
+### Details
 
-Points:         **100**
+Points:      100
+Category:    forensic
+Validations: 50
 
-Category:       **forensic**
-
-Validations:    **50**
-
-## Solution
+### Solution
 
 We were given a file called [usb.pcap](/resources/2016/ndh/catch_me_if_you_can/usb.pcap).
 After digging around the file for a while it appears that it's a USB transfer of
