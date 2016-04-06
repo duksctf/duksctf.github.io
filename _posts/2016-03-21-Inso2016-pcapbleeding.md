@@ -4,6 +4,14 @@ title: Insomni'hack 2016 - Pcapbleeding
 date: 2016-03-21
 ---
 
+We got a pcap, the problem was obvious from the challenge name
+(heartbleed). Given the RSA-2048 pubkey we sought for prime numbers of
+around 1024 bits in the pcaps, then reconstructed the private key and
+used it to decrypt the encrypted part of the session, which contained
+the flag.
+
+<!--more-->
+
 ### Description
 
 *Finally, somebody has read our 2014 log files. We think an attack 
@@ -14,11 +22,17 @@ hope it's not broken*
 
 <!--more-->
 
-The [Insomni'hack](http://insomnihack.ch/) conference and CTF happened last Friday in Geneva, as usual it was a lot of fun. And as usual, Dragon Sector won the CTF, beating a few other world-class teams that made the trip for this on-site jeopardy CTF. About 80 teams registered, and the final ranking looks as follows for the first 25 teams:
+The [Insomni'hack](http://insomnihack.ch/) conference and CTF happened
+last Friday in Geneva, as usual it was a lot of fun. And as usual,
+Dragon Sector won the CTF, beating a few other world-class teams that
+made the trip for this on-site jeopardy CTF. About 80 teams registered,
+and the final ranking looks as follows for the first 25 teams:
 
 ![Ranking](/resources/2016/insomnihack/pcapbleeding/ranking.png) 
 
-There was only one challenge in the crypto category, "pcapbleeding". With such a name, the vulnerability was obvious: [Heartbleed](http://heartbleed.com/). We were given three files
+There was only one challenge in the crypto category, "pcapbleeding".
+With such a name, the vulnerability was obvious:
+[Heartbleed](http://heartbleed.com/). We were given three files
 <ul>
         <li><code>attack_log.pcap</code>, a capture of a partial TLS session</li>
         <li><code>hb_scrt_ch.crt</code>, the certificate of the server</li>
