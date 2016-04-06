@@ -4,13 +4,20 @@ title: "Nuit du hack quals 2016 - Catch me if you can"
 date: 2016-04-04
 ---
 
+The task is a usb pcap where two files were transfered. The trick was to take
+each odd packet number and take 0x708 of each to create the first file, use the
+even for the 2nd file. We were left with two Libreoffice ods file. In the 2nd
+one, we found a table and a weird alphabetic suite which used against the table
+give us  the flag.
+
+<!--more-->
+
 ### Description
 
 *We managed to infect the computer of a target. We recorded all packets
 transferred over the USB port, but there is something unusual. We need them to
 be sorted to get the juicy secret.*
 
-<!--more-->
 
 ### Details
 
