@@ -8,7 +8,7 @@
 # Site settings
 name: duksctf
 title: duksctf
-email: redacted@redacted.com
+email: duks.ctf@gmail.com
 description: >
     This blog is for hosting writeup from CTF we play in.
 baseurl: "" # the subpath of your site, e.g. /blog
