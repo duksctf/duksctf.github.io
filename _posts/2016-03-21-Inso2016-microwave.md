@@ -4,6 +4,13 @@ title: Insomni'hack 2016 - Microwave
 date: 2016-03-21
 ---
 
+*The microwave application is used to let your microwave tweets you favorite food.
+We identified two vulnerabilities in the binary: a string format and a buffer overflow.
+The string format allowed us to leak the canary and some addresses of the libc. Those
+were then used to exploit the buffer overflow and access the flag.*
+
+<!--more-->
+
 This is a write-up for the <em>microwave</em> pwn of <a href="https://insomnihack.ch/">Insomni'hack</a> CTF (first published on <a href="https://deadc0de.re/articles/microwave-write-up.html">deadc0de.re</a>).
 
 <!--more-->
