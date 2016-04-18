@@ -1,8 +1,7 @@
 ---
 layout: post
-title: "Plaid CTF 2016 - butterfly"
+title: "Plaid CTF 2016 - Butterfly"
 date: 2016-04-18 02:00
-categories: ctf exploit
 ---
 
 *Here is a solution to the second pwn challenge `butterfly`. This is not your usual buffer overflow, but rather a nice demonstration on how bit flips can be dangerous!*
