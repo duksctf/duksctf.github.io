@@ -4,9 +4,9 @@ title: "Full name of the CTF Year - Name of the task"
 date: 2016-04-04
 ---
 
-Write a small excerpt that will show on the first page of the blog.
+*Write a small excerpt that will show on the first page of the blog.
 Maximum 4 lines, it must explain the chall quickly and the tldr of the
-solution.
+solution.*
 
 <!--more-->
 
