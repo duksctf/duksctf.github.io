@@ -101,9 +101,9 @@ Fun isn't it...
 Digging in the 2nd file is more profitable, it show us a sort of table with
 alphabetic and letter:
 
-
+<a href="/resources/2016/ndh/catch_me_if_you_can/screen_file2.png">
 <img src="/resources/2016/ndh/catch_me_if_you_can/screen_file2.png" width="800">
-
+</a>
 if you scroll to the **1048576** line vertical and to the top right most, yes there are
 serious... you'll found a "code":
 > g6d5g5f2b6g5d3e4d4b3c5b6k2j5j5g4l2 

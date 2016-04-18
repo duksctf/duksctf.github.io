@@ -44,8 +44,9 @@ files with SMTP:
 * Private key used to encrypt AES key for encrypting the victim's files
 
 We extracted the private key found in the second email:
-
-<img src="/resources/2016/pctf/kriptovor/privkey.png" width="800">
+<a href="/resources/2016/pctf/kriptovor/privkey.png">
+<img src="/resources/2016/pctf/kriptovor/privkey.png" width="400">
+</a>
 
 After downloading, installing and updating the trial version of [Delphi 2010](https://www.embarcadero.com/fr/products/delphi/start-for-free).
 We wrote a simple [Delphi Application](/resources/2016/pctf/kriptovor/code.delphi) to load the privkey that we extracted earlier and decrypt the [docx flag file](/resources/2016/pctf/kriptovor/flag.docx.just).
@@ -140,7 +141,9 @@ end.
 
 After running our tool:
 
+<a href="/resources/2016/pctf/kriptovor/Delphi.png">
 <img src="/resources/2016/pctf/kriptovor/Delphi.png" width="800">
+</a>
 
 we were left with a shiny *aes_decrypted* file which is a docx file.
 
