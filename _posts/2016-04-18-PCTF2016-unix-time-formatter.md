@@ -342,7 +342,7 @@ sh: 1: : Permission denied
 
 ```
 
-Allways nullify a `free`'d pointer to avoid using it afterward!
+Always nullify a `free`'d pointer to avoid using it afterward!
 
 [plaidctf]: http://www.plaidctf.com/
 [strdup]: http://man7.org/linux/man-pages/man3/strdup.3.html
