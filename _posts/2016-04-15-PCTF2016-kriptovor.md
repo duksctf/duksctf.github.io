@@ -151,5 +151,5 @@ aes_decrypted: Microsoft Word 2007+
 Opening the docx file gave us the flag: **PCTF{Th4t_w0uld_H4v3_b3en_2_B1tc01nz}**
 
 
-Challenges resources are available in the [resources folder](/resources/2016/pctf/kriptovor).
+Challenges resources are available in the [resources folder](https://github.com/duksctf/duksctf.github.io/tree/master/resources/2016/pctf/kriptovor).
 
