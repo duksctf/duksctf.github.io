@@ -1,0 +1,85 @@
+unit rsa;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, uTPLb_Codec,
+  uTPLb_CryptographicLibrary, uTPLb_BaseNonVisualComponent, uTPLb_Signatory;
+
+type
+  TForm2 = class(TForm)
+    Button1: TButton;
+    Button2: TButton;
+    Signatory1: TSignatory;
+    CryptographicLibrary1: TCryptographicLibrary;
+    RSACodec: TCodec;
+    Button3: TButton;
+    Button4: TButton;
+    Button5: TButton;
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+  private
+    { Déclarations privées }
+  public
+    { Déclarations publiques }
+  end;
+
+var
+  Form2: TForm2;
+
+implementation
+
+{$R *.dfm}
+uses  uTPLb_StreamUtils, uTPLb_Constants, uTPLb_Asymetric, uTPLb_StrUtils;
+procedure TForm2.Button1Click(Sender: TObject);
+begin
+Signatory1.GenerateKeys;
+end;
+
+procedure TForm2.Button2Click(Sender: TObject);
+const sRSAKeyFileName = 'c:\rsa.key';
+var
+  Store: TFileStream;
+
+
+begin
+Store := TFileStream.Create(sRSAKeyFileName, fmCreate);
+Store.Position := 0;
+
+Signatory1.StoreKeysToStream( Store, [partPrivate] );
+end;
+
+procedure TForm2.Button3Click(Sender: TObject);
+const sRSAKeyFileName = 'c:\jon\rsa.key';
+const sEncryptedFile = 'c:\jon\aes_encrypted';
+  var
+  Store: TFileStream;
+  Source: System.TArray<Byte>;
+  s: String;
+  Base64Store: TStream;
+begin
+Store := TFileStream.Create( sRSAKeyFileName, fmOpenRead);
+try
+  Store.Position := 0;
+  Signatory1.LoadKeysFromStream( Store, [partPrivate]);
+  Source := Stream_to_Base64( Store );
+  Base64Store := TFileStream.Create( sRSAKeyFileName + 'b64', fmCreate );
+  Base64Store.WriteBuffer( Source[1], Length( Source ) );
+  Base64Store.Free;
+
+
+finally
+  Store.Free
+  end
+end;
+procedure TForm2.Button4Click(Sender: TObject);
+const sEncryptedFile = 'c:\jon\aes_encrypted';
+const sDecryptedFile = 'c:\jon\aes_decrypted';
+begin
+RSACodec.DecryptFile(sDecryptedFile, sEncryptedFile);
+
+end;
+end.
