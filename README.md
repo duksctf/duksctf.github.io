@@ -59,6 +59,10 @@ Configuration file: /home/mofo/works/project/jekyll_blog/duksctf.github.io/_conf
 3. Edit the template at your convenience, don't change the layout and the
    title, rename it with 2016-MM-DD-CTFYEAR-name-of-the-task.md 
 4. For Markdown syntax, you can check [Markdown CheatSheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
-5. When you think everything is ready, git add _posts/yournewwriteup.md
-6. git commit -m 'added writeup for CTF XXX task XXX'
-7. git push
+5. When you think everything is ready, git checkout -b writeup-task
+6. git add _posts/yournewwriteup.md
+6. git add resources
+7. git commit -m 'added writeup for CTF XXX task XXX'
+8. git checkout master
+9. git merge writeup-task
+10. git push
