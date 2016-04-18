@@ -1,28 +1,32 @@
 ---
 layout: post
-title: "PlaidCTF - unix_time_formatter"
+title: "Plaid CTF 2016 - Unix Time Formatter"
 date: 2016-04-18 01:00
 ---
 
-Last weekend was held the [PlaidCTF][plaidctf], as usual with high quality and very demanding challenges to solve. Here is a solution to the first pwn challenge `unix_time_formatter`.
+*Last weekend was held the [PlaidCTF][plaidctf], as usual with high quality and very demanding challenges to solve. Here is a solution to the first pwn challenge `unix_time_formatter`.*
+
 <!--more-->
 
-# Basic Information
+### Description
 
-From the organizers:
+*Converting Unix time to a date is hard, so Mary wrote a tool to do so.
+Can you you exploit it to get a shell? Running at unix.pwning.xxx:9999*
 
-```plaintext
-unix_time_formatter
-Pwnable (76 pts)
+### Details
 
-Converting Unix time to a date is hard, so Mary wrote a tool to do so.
+Points:      76
 
-Can you you exploit it to get a shell? Running at unix.pwning.xxx:9999
-```
+Category:    Pwnable
+
+Validations: 113
+
+### Solution
 
 This is a stripped ELF 64-bit binary with stack canaries and NX enabled:
 
-```
+```bash
+
 $ file unix_time_formatter
 unix_time_formatter: ELF 64-bit LSB executable, x86-64, version 1 (SYSV),
 dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux
@@ -34,12 +38,9 @@ Partial RELRO   Canary found      NX enabled    No PIE          No RPATH
 RUNPATH      FILE
 No RUNPATH   unix_time_formatter
 ```
-
-# Operation
-
 The binary is a simple user interface to the `date` command:
 
-```
+```bash
 $ ./unix_time_formatter 
 Welcome to Mary's Unix Time Formatter!
 1) Set a time format.
@@ -49,7 +50,6 @@ Welcome to Mary's Unix Time Formatter!
 5) Exit.
 >
 ```
-
 The main function is located at `0x400a70`, which prints the above menu and then select the action to do with a simple switch case:
 
 ```
@@ -59,7 +59,6 @@ The main function is located at `0x400a70`, which prints the above menu and then
 0x00400af4      77a5           ja 0x400a9b
 0x00400af6      ff24c5c01240.  jmp qword [rax*8 + 0x4012c0]
 ```
-
 As a note, whenever there is a free or allocation done on the heap, the binary checks if the `DEBUG` environment variable is set to print debugging information.
 
 ## Set a time format
@@ -259,7 +258,7 @@ To be able to execute arbitrary command through the `system` call, we need to be
 
 At first I tried to execute a shell, but it wasn't responding therefore I made a first payload to list the content of the current directory and then I modified it to read the content of the file containing the flag:
 
-```
+```python   
 #!/usr/bin/env python2
 # Please port pwntools to python3...
 from pwn import *

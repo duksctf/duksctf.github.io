@@ -38,9 +38,10 @@ After digging around the file for a while it appears that it's a capture of the 
 We found the following [analysis](https://www.fireeye.com/blog/threat-research/2015/04/analysis_of_kriptovo.html) on google.
 It's written that after successful infection, the ransomware will send three
 files with SMTP:
- - The list of the process running on the victim
- - A screenshot of the desktop
- - Private key used to encrypt AES key for encrypting the victim's files
+
+* The list of the process running on the victim
+* A screenshot of the desktop
+* Private key used to encrypt AES key for encrypting the victim's files
 
 We extracted the private key found in the second email:
 
