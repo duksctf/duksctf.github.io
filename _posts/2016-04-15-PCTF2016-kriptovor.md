@@ -39,7 +39,7 @@ We found the following [analysis](https://www.fireeye.com/blog/threat-research/2
 It's written that after successful infection, the ransomware will send three
 files with SMTP:
 
-* The list of the process running on the victim
+* The list of the processes running on the victim
 * A screenshot of the desktop
 * Private key used to encrypt AES key for encrypting the victim's files
 
@@ -140,7 +140,7 @@ end.
 
 After running our tool:
 
-<img src="/resources/2016/pctf/kriptovor/privkey.png" width="800">
+<img src="/resources/2016/pctf/kriptovor/Delphi.png" width="800">
 
 we were left with a shiny *aes_decrypted* file which is a docx file.
 
