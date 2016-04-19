@@ -4,7 +4,7 @@ title: "Plaid CTF 2016 - Unix Time Formatter"
 date: 2016-04-18 01:00
 ---
 
-*Last weekend was held the [PlaidCTF][plaidctf], as usual with high quality and very demanding challenges to solve. Here is a solution to the first pwn challenge `unix_time_formatter`.*
+*This entry level pwnabel challenge proposes a use-after-free vulnerability that is used to inject commands in a call to system.*
 
 <!--more-->
 
