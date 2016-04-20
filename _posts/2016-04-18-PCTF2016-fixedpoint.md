@@ -185,14 +185,14 @@ int main(void) {
   size_t size = sizeof(opcodes) / sizeof(opcodes[0]);
 
   /* dark pointer magic
-   * the idea is to have a look at the float value from an interger prespective
+   * the idea is to have a look at the float value from an integer prespective
    * to have an easy way to manipulate and compare it.
    */
   pf = &v;
   pi = (int *)pf;
 
   got = 0;
-  for (i = 0; (got < 14) && (i < 0xffffffff); i++) {
+  for (i = 0; (got < size) && (i < 0xffffffff); i++) {
     temp = i;
     v = ((float)temp) / 1337.0;
     for ( o = 0; o < size; o++ ) {
