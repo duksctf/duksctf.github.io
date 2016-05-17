@@ -20,12 +20,15 @@ For ubuntu:
 
 ```bash
 sudo apt-get update
-sudo apt-get install ruby2.0 rubygems
+sudo apt-get install ruby2.2 ruby-dev rubygems
 ```
 Install bundler:
 
 ```bash
 gem install bundler
+gem install jekyll
+gem install activesupport
+gem install github-pages
 ```
 
 then do a ```bundle install```
@@ -33,7 +36,8 @@ then do a ```bundle install```
 To render your jekyll (do this in the repository you cloned):
 
 ```bash
-bundle exec jekyll serve```
+bundle exec jekyll serve
+```
 
 output if everything is working correctly:
 
