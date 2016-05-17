@@ -8,6 +8,7 @@ date: 2016-05-14
 
 <!--more-->
 
+
 ### Description
 
 *We have set up this fancy automatic signing server!*
@@ -26,13 +27,10 @@ Validations: ??
 
 ### Solution
 
-When we connected to the server, it allow us to sign any message. To check which kind of encryption is is we sent 1 and the answer was 1. We could deduce that plain RSA without padding was used *i.e*:
-
-``` python
-c = pow(m,d,n)
+When we connected to the server, it allow us to sign any message. To check which kind of encryption is is we sent $$1$$ and the answer was $$1$$. We could deduce that plain RSA without padding was used *i.e*: $$c = m^d \mod n$$.
 ```
 
-However, here n is unknown. We can make a guess that e=65535 and since m**d**e == m mod n we can recover n with:
+However, here $$n$$ is unknown. We can make a guess that $$e=65535$$ and since $$(m^d)^e = m \mod n$$ we can recover $$n$$. We just send $$p_1 = 2$$ and $$p_2 = 3$$ to the server and we got their signed version. Then $$n = \gcd\left((2^d)^e-2, (3^d)^e)-3\right)$$. We use python to compute $$n$$:
 
 ``` python
 import gmpy2
@@ -50,5 +48,5 @@ After a few minutes of computation we got:
 n = ...
 ```
 
-the message to sign was m="". The idea to bypass the server is to sign m*2 and the inverse of 2 modulo n and finally the correct signature is m*2/2.
+the message to sign was m="". The idea to bypass the server is to sign $$m\cdot 2$$ which is different than $$m$$ and the inverse of $$2$$ modulo $$n$$ and finally the correct signature is $$m\cdot 2 \cdot 2^{-1} \mod n$$.
 
