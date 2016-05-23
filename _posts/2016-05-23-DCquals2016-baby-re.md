@@ -75,11 +75,23 @@ argument.
 We went from the decompiled code
 
 ```C
-    if (*(int32_t *)(var_2B8 + 0x30) * 0xd5e5 + *(int32_t *)(var_2B8 + 0x2c) * 0x99ae + *(int32_t *)(var_2B8 + 0x28) * var_288 + *(int32_t *)(var_2B8 + 0x24) * 0x3922 + *(int32_t *)(var_2B8 + 0x20) * 0xe15d + *(int32_t *)(var_2B8 + 0x1c) * var_294 + *(int32_t *)(var_2B8 + 0x18) * var_298 + *(int32_t *)(var_2B8 + 0x14) * 0xa89e + (var_2B0 * *(int32_t *)var_2B8 - *(int32_t *)(var_2B8 + 0x4) * var_2AC - *(int32_t *)(var_2B8 + 0x8) * var_2A8 - *(int32_t *)(var_2B8 + 0xc) * 0xb4c1) + *(int32_t *)(var_2B8 + 0x10) * var_2A0 != 0x1468753) {
+    if (*(int32_t *)(var_2B8 + 0x30) * 0xd5e5 + *(int32_t *)(var_2B8 + 0x2c) * 0x99ae + \
+    *(int32_t *)(var_2B8 + 0x28) * var_288 + *(int32_t *)(var_2B8 + 0x24) * 0x3922 + \
+    *(int32_t *)(var_2B8 + 0x20) * 0xe15d + *(int32_t *)(var_2B8 + 0x1c) * var_294 + \
+    *(int32_t *)(var_2B8 + 0x18) * var_298 + *(int32_t *)(var_2B8 + 0x14) * 0xa89e + \
+    (var_2B0 * *(int32_t *)var_2B8 - *(int32_t *)(var_2B8 + 0x4) * var_2AC - \
+    *(int32_t *)(var_2B8 + 0x8) * var_2A8 - *(int32_t *)(var_2B8 + 0xc) * 0xb4c1) + \
+    *(int32_t *)(var_2B8 + 0x10) * var_2A0 != 0x1468753) {
             rax = 0x0;
     }
     else {
-            if (*(int32_t *)(var_2B8 + 0x30) * 0xcfec + (*(int32_t *)(var_2B8 + 0x14) * var_268 + *(int32_t *)(var_2B8 + 0x10) * 0x39ca + (var_27C * *(int32_t *)var_2B8 + *(int32_t *)(var_2B8 + 0x4) * var_278 - *(int32_t *)(var_2B8 + 0x8) * 0x1783) + *(int32_t *)(var_2B8 + 0xc) * 0x9832 - *(int32_t *)(var_2B8 + 0x18) * 0x345 - *(int32_t *)(var_2B8 + 0x1c) * var_260 - *(int32_t *)(var_2B8 + 0x20) * 0xc5a0 - *(int32_t *)(var_2B8 + 0x24) * 0x2e35 - *(int32_t *)(var_2B8 + 0x28) * 0x4e4e - *(int32_t *)(var_2B8 + 0x2c) * var_250) != 0x162f30) {
+            if (*(int32_t *)(var_2B8 + 0x30) * 0xcfec + (*(int32_t *)(var_2B8 + 0x14) * var_268 + \
+            *(int32_t *)(var_2B8 + 0x10) * 0x39ca + (var_27C * *(int32_t *)var_2B8 + \
+            *(int32_t *)(var_2B8 + 0x4) * var_278 - *(int32_t *)(var_2B8 + 0x8) * 0x1783) + \
+            *(int32_t *)(var_2B8 + 0xc) * 0x9832 - *(int32_t *)(var_2B8 + 0x18) * 0x345 - \
+            *(int32_t *)(var_2B8 + 0x1c) * var_260 - *(int32_t *)(var_2B8 + 0x20) * 0xc5a0 - \
+            *(int32_t *)(var_2B8 + 0x24) * 0x2e35 - *(int32_t *)(var_2B8 + 0x28) * 0x4e4e - \
+            *(int32_t *)(var_2B8 + 0x2c) * var_250) != 0x162f30) {
                     rax = 0x0;
             }
             else {
