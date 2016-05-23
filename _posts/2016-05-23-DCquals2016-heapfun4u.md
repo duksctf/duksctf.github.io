@@ -15,6 +15,7 @@ Guess what, it is a heap bug.
 
 file heapfun4u_873c6d81dd688c9057d5b229cf80579e.quals.shallweplayaga.me:3957
 ```
+
 ### Details
 
 Points:      variable
