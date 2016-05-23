@@ -28,7 +28,7 @@ Validations: a lot
 
 We're given the binary of a remote service:
 
-```
+```bash
 $ file baby-re
 baby-re: ELF 64-bit LSB executable, x86-64, version 1 (SYSV),
 dynamically linked (uses shared libs), for GNU/Linux 2.6.32, not
@@ -38,7 +38,7 @@ stripped
 This asks for 13 inputs, and then returns `Wrong`, unless we give it
 the right input.
 
-```
+```bash
 $ ./baby-re
 Var[0]: 1
 Var[1]: 2
@@ -75,7 +75,7 @@ argument.
 
 We went from the decompiled code
 
-```C
+```c
     if (*(int32_t *)(var_2B8 + 0x30) * 0xd5e5 + *(int32_t *)(var_2B8 + 0x2c) * 0x99ae + \
     *(int32_t *)(var_2B8 + 0x28) * var_288 + *(int32_t *)(var_2B8 + 0x24) * 0x3922 + \
     *(int32_t *)(var_2B8 + 0x20) * 0xe15d + *(int32_t *)(var_2B8 + 0x1c) * var_294 + \
