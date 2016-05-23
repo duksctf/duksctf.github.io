@@ -62,10 +62,11 @@ The interesting function was obvious: `CheckSolution`:
 
 ![CheckSolution](/resources/2016/dcquals/babyre/checksolution.png)
 
-Interestingly, Hopper gave right away a decompiled code `CheckSolution`,
-whereas Hexrays failed due to the simple anti-reverse tricks. (Even
-after getting rid of these protections, IDA gave us a much cleaner C
-code than Hopper, but that included a few errors.)
+Interestingly, Hopper gave right away an (almost) correct decompiled
+code for `CheckSolution`'s, whereas Hexrays failed due to the simple
+anti-reverse tricks. (Even after getting rid of these protections, IDA
+gave us a much cleaner C code than Hopper, but that included a few
+errors.)
 
 `CheckSolution` first computed a bunch of constants, which were then
 used as coefficient of a linear system of equations over signed 32-bit
