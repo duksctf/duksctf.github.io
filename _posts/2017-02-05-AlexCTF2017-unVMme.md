@@ -4,7 +4,7 @@ title: AlexCTF 2017 - unVM me
 date: 2017-02-05
 ---
 
-*Python decompilation and MD5 bruteforce*
+*A Python byte code file was provided without the source code. After its decompilation, we noticed that each 5-byte slice of the flag was hash with MD5 and compared. After brute forcing the hashes contained in the file we got the flag.*
 
 <!--more-->
 
@@ -12,7 +12,7 @@ date: 2017-02-05
 
 *If I tell you what version of python I used .. where is the fun in that?*
 
-*Attachment: [unvm_me.pyc](/resources/2017/alexctf/unvm_me.pyc)*
+*Attachment: [unvm_me.pyc](/resources/2017/alexctf/unvmme/unvm_me.pyc)*
 
 
 ### Details
