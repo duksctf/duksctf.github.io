@@ -34,10 +34,8 @@ tool help of reversing of image for many Kindle format.
 
 <img src="/resources/2017/alexctf/unknown_format/usb_pcap.png" width="800">
 
-We extracted first two
-[URB's](https://www.kernel.org/doc/Documentation/usb/URB.txt) 
-https://www.google.fr/#q=SP01+FC04) and then we reconstructed the image with
-cat:
+We extracted first two packet of 
+[URB's](https://www.kernel.org/doc/Documentation/usb/URB.txt)  and then we reconstructed the image with cat:
 
 ``` bash
 cat packet1.bin packet.bin > packet.bin
@@ -52,13 +50,13 @@ bytes there is a gziped sections of data.
 
 <img src="/resources/2017/alexctf/unknown_format/gzip_header.png" width="800">
 
-We used *dd* to extract the 
+We used *dd* to extract the broken gziped archive: 
 
 ``` bash
 dd if=packet.bin of=broken.bin skip=1 bs=254
 ```
 We tried to extract it with *tar xvf* whic didn't works.
-We used then a simple python script for [stackoverflow](https://stackoverflow.com/questions/26794514/how-to-extract-data-from-corrupted-gzip-files-in-python)
+We used then a simple python script from [stackoverflow](https://stackoverflow.com/questions/26794514/how-to-extract-data-from-corrupted-gzip-files-in-python):
 
 ``` python
 # http://stackoverflow.com/questions/2423866/python-decompressing-gzip-chunk-by-chunk
