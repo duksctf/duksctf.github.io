@@ -74,7 +74,6 @@ def read_corrupted_file(filename, CHUNKSIZE=1024):
         except Exception as e:
             print 'Error: %s -> %s' % (filename, e.message)
         return result_str
-``` bash
 
 In [3]: read_corrupted_file("broken.bin")
 REDACTED
