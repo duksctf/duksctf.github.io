@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "2017 AlexCTF - Unknown Format"
+title: "AlexCTF 2017 - Unknown Format"
 date: 2017-02-04
 ---
 
