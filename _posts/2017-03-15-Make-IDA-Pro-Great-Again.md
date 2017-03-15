@@ -272,3 +272,4 @@ All the resources for this post are available in [ida](https://github.com/duksct
                                                                             
 I would like to thanks [sh4ka](https://twitter.com/andremoulu) and [kamino](https://twitter.com/_kamino_) for supporting me raging on this f****** Qt/PyQt nightmware, helping me on some python stuff and for their useful links.
 
+If you have questions I'm available on IRC @freenode and on twitter [@dummys1337](https://twitter.com/dummys1337).
