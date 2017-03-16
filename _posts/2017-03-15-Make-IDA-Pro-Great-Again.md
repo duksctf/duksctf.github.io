@@ -4,7 +4,7 @@ title: "Make IDA Pro Great Again"
 date: 2017-03-15
 ---
 
-*In this post I will explain a neat way to use our own python version with IDA
+*In this post I will explain a neat way to use our own python, Qt 5.6, PyQt 5.6 version with IDA
 Pro, then how to use a chrooted Arch Linux 32bit to run IDA Pro in
 order not to pollute our host with pesky lib32-XX packages and Finally I will
 document installation and configuration of some useful IDA Pro plugins.*
@@ -54,7 +54,7 @@ Include = /etc/pacman.d/mirrorlist
 Note: There are some packages that are not needed for a normal installation of IDA Pro without plugins. I found it faster to install them during the pacstrap rather than from the chroot.
 
 ``` bash
-linux32 pacstrap -C path/to/pacman.conf -di /opt/arch32 base base-devel zlib libxext libxrender libsm libice glibc glib2 fontconfig freetype2 python2-keystone python2 python2-jupyter_client python2-ipykernel python2-ipython libxkbcommon-x11 libxkbcommon cmocka
+linux32 pacstrap -C path/to/pacman.conf -di /opt/arch32 base base-devel zlib libxext libxrender libsm libice glibc glib2 fontconfig freetype2 python2-keystone python2 python2-jupyter_client python2-ipykernel python2-ipython libxkbcommon-x11 libxkbcommon cmocka gtk2 p7zip wget python2-pip
 ```
 ###### Configure our newly created chroot for users/network
 
@@ -132,14 +132,116 @@ pacman -S adobe-source-code-pro-fonts xorg-fonts-type1 ttf-dejavu artwiz-fonts f
 export DISPLAY=:0 
 ```
 Where 0 is the ID of your display as retrived earlier.
- 
+
+###### Download, Patch, Compile and Install Qt
+
+Download Qt 5.6 sources:
+``` bash
+wget https://download.qt.io/official_releases/qt/5.6/5.6.0/single/qt-everywhere-opensource-src-5.6.0.7z
+```
+Extract, configure and build it:
+
+```bash
+7z x qt-everywhere-opensource-src-5.6.0.7z
+```
+Download and Apply Hex-Rays patch:
+```bash
+cd qt-everywhere-opensource-src-5.6.0
+wget http://www.hexblog.com/wp-content/uploads/2016/08/qt-5_6_0_full.zip
+7z x qt-5_6_0_full.zip
+patch -p1 < qt-5_6_0_full.patch
+```
+
+Configure, compile and install:
+``` bash
+./configure -nomake tests -qtnamespace QT -confirm-license -accessibility -opensource -force-debug-info -developer-build -fontconfig -qt-freetype -qt-libpng -glib -qt-xcb -dbus -qt-sql-sqlite -gtkstyle
+make -j9
+make install
+```
+
+###### Download, Compile and Install QtSvg 5.6
+
+Starting from Qt 5.1, the QtSvg has been moved to a standalone package.
+
+Download the package:
+
+``` bash
+wget https://download.qt.io/official_releases/qt/5.6/5.6.0/submodules/qtsvg-opensource-src-5.6.0.7z
+7z x qtsvg-opensource-src-5.6.0.7z
+cd qtsvg-opensource-src-5.6.0
+```
+Qmake, make and install Qtsvg 5.6:
+``` bash
+../qt-everywhere-opensource-src-5/qtbase/bin/qmake
+make -j5
+make install
+
+```
+
+###### Download, Compile and Install SIP
+
+Download SIP 4.18 sources:
+``` bash
+wget https://sourceforge.net/projects/pyqt/files/sip/sip-4.18/sip-4.18.tar.gz/download
+tar xvf sip-4.18.tar.gz
+cd sip-4.18
+```
+
+Configure, Compile and install Sip 4.18:
+``` bash
+python2 configure.py
+make -j9
+make install
+```
+
+###### Download, Patch, Compile and Install PyQt 5.6
+
+Download PyQt 5.6:
+``` bash
+wget https://sourceforge.net/projects/pyqt/files/PyQt5/PyQt-5.6/PyQt5_gpl-5.6.tar.gz/download
+tar xvf PyQt5_gpl-5.6.tar.gz
+cd PyQt5_gpl-5.6
+```
+
+Download my PyQt patch (with the help of Hex-Rays):
+``` bash
+wget https://github.com/duksctf/duksctf.github.io/tree/master/resources/2017/ida/pyqt.patch 
+patch -p1 < pyqt.patch
+```
+
+configure, Compile and Install PyQt 5.6:
+``` bash
+ python2 configure.py \
+   --sip /root/build/qt/sip-4.18/sipgen/sip \
+   --sip-incdir /root/build/qt/sip-4.18/siplib \
+   --confirm-license \
+   --enable QtCore \
+   --enable QtGui \
+   --enable QtWidgets \
+   --enable QtSvg \
+   --no-designer-plugin \
+   --no-qml-plugin \
+   --no-tools \
+   --verbose \
+   --qmake /root/build/qt/qt56/qt-everywhere-opensource-src-5.6.0/qtbase/bin/qmake
+make -j9
+make install
+```
+
 ###### Install IDA Pro
 
 Run the IDA Pro installer. When installing IDA don't forget choosing "no" when the installer asks to install the bundled version of python.
 
-###### Configure IDA pro to use our own python
+###### Configure IDA pro to use our own python and Qt suite
 ``` bash
-cd /opt/ida-6.95/python/lib
+cd /opt/ida-6.95
+rm -r libQt5*
+cp
+/root/build/qt/qt56/qt-everywhere-opensource-src-5.6.0/qtbase/lib/libQt5{CLucene,Core,DBus,Gui,Help,Network,PrintSupport,Sql,Widgets,XcbQpa}.so.5 .
+cd python
+rm -r PyQt
+rm -r sip-files
+cd lib
 rm python27.zip
 mv python2.7 python_old
 ln -s /usr/lib/python2.7 .
@@ -170,21 +272,20 @@ I like to use [unicorn-engine](http://www.unicorn-engine.org/) to emulate weird 
 
 When I was using IDA Pro under Windows, one of my favorite plugin was [ida_ipython](https://github.com/james91b/ida_ipython). Unfortunately this plugin is Windows only. [Marc-Etienne](https://github.com/marc-etienne) from ESET developped a similar [plugin](https://github.com/marc-etienne) but this time available on Windows, Linux and Mac OSX.
 
-###### Installation of ipyida
+###### Install qtconsole
+
+``` bash
+pip2 install qtconsole
+```
+
+###### Installation of ipyida with jupyter_support
 
 ``` bash
 cd ~/.idapro
 cd plugins
 git clone https://github.com/eset/ipyida.git
+git checkout jupyter_support
 mv ipyida ipyida_temp
-```
-
-###### Monkey patching to remove Qt dependencies and use ipykernel rather than old IPython
-
-``` bash
-cd ipyida_temp
-wget https://github.com/duksctf/duksctf.github.io/tree/master/resources/2017/ida/ipyida.patch
-patch -p1 < ipyida.patch
 ```
 
 ###### Install it
@@ -272,6 +373,6 @@ Here is a little video of the ipyida plugin:
 
 All the resources for this post are available [here](https://github.com/duksctf/duksctf.github.io/tree/master/resources/2017/ida).
                                                                             
-I would like to thank [sh4ka](https://twitter.com/andremoulu) and [kamino](https://twitter.com/_kamino_) for tollerating me raging on this f****** Qt/PyQt nightmWare, while helping me on some python stuff and providing useful links.
+I would like to thank [sh4ka](https://twitter.com/andremoulu) and [kamino](https://twitter.com/_kamino_) for tollerating me raging on this f****** Qt/PyQt nightmWare, while helping me on some python stuff and providing useful links. Arnaud Diederen from [IDA Pro Team](https://www.hex-rays.com/index.shtml) helping me to patch and compile Qt, PyQt and SIP.
 
 If you have questions I'm available on IRC @freenode and on twitter [@dummys1337](https://twitter.com/dummys1337).
