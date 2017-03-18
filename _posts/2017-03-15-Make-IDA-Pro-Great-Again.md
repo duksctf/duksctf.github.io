@@ -209,7 +209,7 @@ cd PyQt5_gpl-5.6
 
 Download my PyQt patch (with the help of Hex-Rays):
 ``` bash
-wget https://github.com/duksctf/duksctf.github.io/tree/master/resources/2017/ida/pyqt.patch 
+wget https://raw.githubusercontent.com/duksctf/duksctf.github.io/master/resources/2017/ida/pyqt.patch 
 patch -p1 < pyqt.patch
 ```
 
