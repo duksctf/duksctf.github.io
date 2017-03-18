@@ -54,7 +54,7 @@ Include = /etc/pacman.d/mirrorlist
 Note: There are some packages that are not needed for a normal installation of IDA Pro without plugins. I found it faster to install them during the pacstrap rather than from the chroot.
 
 ``` bash
-linux32 pacstrap -C path/to/pacman.conf -di /opt/arch32 base base-devel zlib libxext libxrender libsm libice glibc glib2 fontconfig freetype2 python2-keystone python2 python2-jupyter_client python2-ipykernel python2-ipython libxkbcommon-x11 libxkbcommon cmocka gtk2 p7zip wget python2-pip
+linux32 pacstrap -C path/to/pacman.conf -di /opt/arch32 base base-devel zlib libxext libxrender libsm libice glibc glib2 fontconfig freetype2 python2-keystone python2 python2-jupyter_client python2-ipykernel libxkbcommon-x11 libxkbcommon cmocka gtk2 p7zip wget python2-pip
 ```
 ###### Configure our newly created chroot for users/network
 
@@ -150,6 +150,10 @@ cd qt-everywhere-opensource-src-5.6.0
 wget http://www.hexblog.com/wp-content/uploads/2016/08/qt-5_6_0_full.zip
 7z x qt-5_6_0_full.zip
 patch -p1 < qt-5_6_0_full.patch
+```
+Symlink python2 to python to solve Qt make install error:
+``` bash
+ln -s /usr/bin/python2 /usr/bin/python
 ```
 
 Configure, compile and install:
