@@ -54,7 +54,7 @@ Include = /etc/pacman.d/mirrorlist
 Note: There are some packages that are not needed for a normal installation of IDA Pro without plugins. I found it faster to install them during the pacstrap rather than from the chroot.
 
 ``` bash
-linux32 pacstrap -C path/to/pacman.conf -di /opt/arch32 base base-devel zlib libxext libxrender libsm libice glibc glib2 fontconfig freetype2 python2-keystone python2 python2-jupyter_client python2-ipykernel libxkbcommon-x11 libxkbcommon cmocka gtk2 p7zip wget python2-pip
+linux32 pacstrap -C path/to/pacman.conf -di /opt/arch32 base base-devel zlib libxext libxrender libsm libice glibc glib2 fontconfig freetype2 python2-keystone python2 python2-jupyter_client python2-ipykernel libxkbcommon-x11 libxkbcommon cmocka gtk2 p7zip wget python2-pip git
 ```
 ###### Configure our newly created chroot for users/network
 
@@ -243,13 +243,13 @@ rm -r libQt5*
 cp
 /root/build/qt/qt56/qt-everywhere-opensource-src-5.6.0/qtbase/lib/libQt5{CLucene,Core,DBus,Gui,Help,Network,PrintSupport,Sql,Widgets,XcbQpa}.so.5 .
 cd python
-rm -r PyQt
+rm -r PyQt5
 rm -r sip-files
 cd lib
 rm python27.zip
 mv python2.7 python_old
 ln -s /usr/lib/python2.7 .
-mv "python_old/lib-dynload/ida_*" /usr/lib/python2.7/lib-dynload
+cp -r "python_old/lib-dynload/ida_*" /usr/lib/python2.7/lib-dynload
 rm -r python_old
 ```
 
@@ -278,25 +278,33 @@ When I was using IDA Pro under Windows, one of my favorite plugin was [ida_ipyth
 
 ###### Install qtconsole
 
+In the chroot again:
+
 ``` bash
+sudo linux32 arch-chroot arch_32_chroot
 pip2 install qtconsole
 ```
 
 ###### Installation of ipyida with jupyter_support
 
+Not in the chroot:
+
 ``` bash
 cd ~/.idapro
 cd plugins
 git clone https://github.com/eset/ipyida.git
+cd ipyida
 git checkout jupyter_support
+cd ..
 mv ipyida ipyida_temp
 ```
 
 ###### Install it
 
 ``` bash
-mv ipyida ipyida_temp/ipyida_plugin_stub.py ~/.idapro/plugins
-mv ipyida ipyida_temp/ipyida ~/.idapro/plugins
+mv ipyida_temp/ipyida ~/.idapro/plugins
+mv ipyida_temp/ipyida_plugin_stub.py ~/.idapro/plugins/ipyida
+rm -r ipyida_temp
 ```
 
 ##### Install keypatch in order to patch binaries, using assembly language
@@ -346,7 +354,7 @@ pacman -U python2-unicorn-xxx.pkg.tar.xz
 ###### Fix weird issue on unicorn egg file
 
 ``` bash
-chown -R mofo:mofo /usr/lib/python2.7
+chown -R youruser:youruser /usr/lib/python2.7
 ```
 PS: I know it's hacky, but it's a chroot so who cares...
 
