@@ -90,9 +90,9 @@ and after an excruciating wait, we obtain:
 Mhhhh, this looks really bad: there is a 0 value, which makes no sense and even worse, there is twice the same value `77305463456367066925437428445119014850274586342778776595296254111629978560855`! 
 The probability of obtaining either is theoretically around $$2^{-128}$$, already negligible, but to have both that's inconceivable. 
 
-So we've confirmed that this RNG script is seriously broken, but to which extent? What could go wrong with Blum-Micali PRNG? Well, obviously, if one were to chose a generator  $$g$$ value which is not a root of the unity, then it wouldn't be a generator of the whole cyclic group $$\mathbb{Z}/p\mathbb{Z}$$, but would instead only generator a small subgroup $$\langle g\rangle>\lt\mathbb{Z}_p$$.
+So we've confirmed that this RNG script is seriously broken, but to which extent? What could go wrong with Blum-Micali PRNG? Well, obviously, if one were to chose a generator  $$g$$ value which is not a primitive root modulo $$p$$, then it wouldn't be a generator of the whole cyclic group $$\mathbb{Z}/p\mathbb{Z}$$, but would instead only generate a small subgroup $$\langle g\rangle\lt\mathbb{Z}_p$$.
 
-This can be easily empirically tested by simply trying to generate the first 10000 elements of the group with the following script:
+This can be empirically tested by simply trying to generate the first 10000 elements of the group with the following script:
 ```python
 p = 14219462995139870823732990991847116988782830807352488252401693038616204860083820490505711585808733926271164036927426970740721056798703931112968394409581
 g = 13281265858694166072477793650892572448879887611901579408464846556561213586303026512968250994625746699137042521035053480634512936761634852301612870164047
@@ -194,7 +194,7 @@ AwEHoUQDQgAE9lzubeCjESRmOXOhrR/t3Gh3u9RP43NIwx7IuXZg0tW+40ntZR6X
 xU+QrdDyEwsUywqshQJYk0c3kuDf952jVw==
 -----END EC PRIVATE KEY-----
 ```
-Along with a file "id_ecdsa.priv", which we can use to authenticate as Bob on the SSH server we were given at the beggining.
+Along with a file "id_ecdsa.priv", which we can use to authenticate as Bob on the SSH server we were given at the beginning.
 
 Challenges resources are available in the [resources
 folder](https://github.com/duksctf/duksctf.github.io/tree/master/resources/2017/ynotctf/)
