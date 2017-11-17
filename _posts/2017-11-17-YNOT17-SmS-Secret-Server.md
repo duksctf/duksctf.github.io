@@ -90,7 +90,7 @@ and after an excruciating wait, we obtain:
 Mhhhh, this looks really bad: there is a 0 value, which makes no sense and even worse, there is twice the same value `77305463456367066925437428445119014850274586342778776595296254111629978560855`! 
 The probability of obtaining either is theoretically around $$2^{-128}$$, already negligible, but to have both that's inconceivable. 
 
-So we've confirmed that this RNG script is seriously broken, but to which extent? What could go wrong with Blum-Micali PRNG? Well, obviously, if one were to chose a generator  $$g$$ value which is not a root of the unity, then it wouldn't be a generator of the whole cyclic group $$/mathbb{Z}/p/mathbb{Z}$$, but would instead only generator a small subgroup $$/langle g/rangle>/lt/mathbb{Z}_p$$.
+So we've confirmed that this RNG script is seriously broken, but to which extent? What could go wrong with Blum-Micali PRNG? Well, obviously, if one were to chose a generator  $$g$$ value which is not a root of the unity, then it wouldn't be a generator of the whole cyclic group $$\mathbb{Z}/p\mathbb{Z}$$, but would instead only generator a small subgroup $$\langle g\rangle>\lt\mathbb{Z}_p$$.
 
 This can be easily empirically tested by simply trying to generate the first 10000 elements of the group with the following script:
 ```python
