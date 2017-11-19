@@ -1,6 +1,7 @@
 ---
 layout: post
 title: AlexCTF 2017 - Bring weakness
+mathjax: true
 date: 2017-02-04
 ---
 

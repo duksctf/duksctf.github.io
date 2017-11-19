@@ -1,6 +1,8 @@
 ---
 layout: post
 title: "PlaidCTF 2017 - Multicast"
+mathjax: true
+
 date: 2017-04-22
 ---
 

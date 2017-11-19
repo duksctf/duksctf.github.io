@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Y-Not-CTF - SmS Secret Secure Server - Crypto"
+mathjax: true
 date: 2017-11-17
 ---
 

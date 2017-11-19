@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "TU CTF 2016 - Secure Auth"
+mathjax: true
 date: 2016-05-14
 ---
 

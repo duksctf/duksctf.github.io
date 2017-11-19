@@ -1,6 +1,8 @@
 ---
 layout: post
 title: "Full name of the CTF Year - Name of the task"
+mathjax: true
+
 date: 2016-04-04
 ---
 

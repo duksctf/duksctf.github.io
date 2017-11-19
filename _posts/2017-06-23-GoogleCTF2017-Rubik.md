@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "GoogleCTF 2017 - Rubik"
+mathjax: true
 date: 2017-06-23
 ---
 
