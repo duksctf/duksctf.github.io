@@ -1,0 +1,25 @@
+---
+---
+
+@import 'jekyll-theme-hacker';
+
+
+// separator for main page - added by dummys
+.line-separator{
+height:1px;
+margin-top:10px;
+background:#b5e853;
+// background:#717171;
+margin:1em auto; 
+width:17em;
+
+border-bottom:1px solid #313030;
+margin-bottom:10px;
+}
+
+// for the written on at the end of the post
+
+.date {
+  font-style: italic;
+  color: #828282;
+}
