@@ -1,5 +1,5 @@
 title: duksctf
-description: Bunch of security enthusiasts who sometimes play CTF 
+description: Bunch of sec. enthusiasts who sometimes play CTF 
 encoding: UTF-8
 show_downloads: false
 google_analytics:
@@ -7,6 +7,9 @@ theme: jekyll-theme-hacker
 
 # needed for jekyll-sitemap generator
 url: "https://duksctf.github.io" 
+
+# logo
+avatar: /assets/images/jekyll-logo.svg 
 
 excerpt_separator: <!--more-->
 
