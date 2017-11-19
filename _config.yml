@@ -4,11 +4,14 @@ show_downloads: false
 google_analytics:
 theme: jekyll-theme-hacker
 
+# needed for jekyll-sitemap generator
+url: "https://duksctf.github.io" 
+
 excerpt_separator: <!--more-->
 
 plugins:
-  - jekyll-sitemap
   - jekyll-feed
+  - jekyll-sitemap
 
 exclude:
   - Gemfile
