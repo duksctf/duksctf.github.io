@@ -33,3 +33,16 @@ nav {
   //font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 18px;
 }
+
+// for the logo
+
+.site-avatar {
+  float: left;
+  width: 70px;
+  height: 70px;
+  margin-right: 1px;
+  img {
+    width: 90%;
+    height: 90%;
+  }
+}

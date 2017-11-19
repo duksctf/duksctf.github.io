@@ -4,18 +4,6 @@ Repo for duksctf.github.io blog.
 
 Clone the actual repo with "git clone git@github.com:duksctf/duksctf.github.io.git"
 
-Create a ```Gemfile``` with:
-
-```
-source 'https://rubygems.org'
-
-require 'json'
-require 'open-uri'
-versions = JSON.parse(open('https://pages.github.com/versions.json').read)
-
-gem 'github-pages', versions['github-pages']
-```
-
 For ubuntu:
 
 ```bash
@@ -31,7 +19,7 @@ gem install activesupport
 gem install github-pages
 ```
 
-then do a ```bundle install```
+then do a ` bundle install `
 
 To render your jekyll (do this in the repository you cloned):
 
