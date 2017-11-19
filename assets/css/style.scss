@@ -4,12 +4,13 @@
 @import 'jekyll-theme-hacker';
 
 
-// separator for main page - added by dummys
+// custom added by dummys 
+// separator for main page
+
 .line-separator{
 height:1px;
 margin-top:10px;
 background:#b5e853;
-// background:#717171;
 margin:1em auto; 
 width:17em;
 
@@ -22,4 +23,13 @@ margin-bottom:10px;
 .date {
   font-style: italic;
   color: #828282;
+}
+
+// for the little menu at the front page
+
+nav {
+  float: right;
+  margin-top: 10px;
+  //font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 18px;
 }
