@@ -12,15 +12,15 @@ date: 2017-11-17
 
 ### Description
 
-*can't remember*
+*An idea is like a virus. Resilient. Highly contagious. And even the smallest seed of an idea can grow. It can grow to define or destroy you. (quote Inception movie)*
 
 ### Details
 
-Points:      600
+Points:      474
 
 Category:    reverse
 
-Validations: 3 - not sure
+Validations: 4
 
 ### Solution
 
