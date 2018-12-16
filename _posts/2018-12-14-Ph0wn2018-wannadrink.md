@@ -6,7 +6,7 @@ mathjax: true
 date: 2018-12-14
 ---
 
-*An ssh access to a Lego Mindstorms platforms: ev3dev is given to control three motors of a robot arm. The goal is to open the fridge door.*
+*An ssh access to a Lego Mindstorms platform: ev3dev is given to control three motors of a robot arm. The goal is to open the fridge door.*
 
 <!--more-->
 
@@ -43,7 +43,7 @@ The robotic arm was made with Lego:
 
 <img src="/resources/2018/ph0wn/wannadrink/robot.jpg" width="800">
 
-When connecting to the server, we had few indication about the service used:
+When connecting to the server, we had an indication about the service used:
 
 ```
 $ ssh robot@10.210.17.146
@@ -74,7 +74,7 @@ $ cat /sys/class/tacho-motor/motor0/commands
 run-forever run-to-abs-pos run-to-rel-pos run-timed run-direct stop reset
 ```
 
-Basically we were interested by the speed and the movement of each motors. We were able to move them with the following commands:
+Basically we were interested by the speed and the movement of each motor. We were able to move them with the following commands:
 
 ```
 $ export M3=/sys/class/tacho-motor/motor3
