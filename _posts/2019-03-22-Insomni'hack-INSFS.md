@@ -37,7 +37,7 @@ You should be able to access the device. Please tell if you are not able and we'
 
 You may need CP2102/CP2109 UART Bridge Controller drivers
 
-Author: marc
+Author: [marc](https://twitter.com/_noskill)
 
 ### Details
 
