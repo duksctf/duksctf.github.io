@@ -7,7 +7,7 @@ date: 2019-04-13
 
 ---
 
-*RSA encrypted flag and prime inveses are given*
+*RSA encrypted flag and prime inverses are given*
 
 <!--more-->
 
