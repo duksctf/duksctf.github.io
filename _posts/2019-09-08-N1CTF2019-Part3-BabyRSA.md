@@ -45,7 +45,7 @@ with $P$ the random number from the padding. If the plaintext bit is 1 we have t
 
 $$ c = (2 {P}^2 + 1) ^ e $$
 
-We can divide by $2^e$ each ciphertexts and test with the [Jacobi symbol](https://en.wikipedia.org/wiki/Jacobi_symbol) if the number is a square modulo $N$ or not. The Jacobi symbol $\left(\frac{a}{p}\right)$ for a prime number $p$ is defined to be 1 if $a$ is a square and -1 if not. Then if our case $\left(\frac{a}{N}\right) = \left(\frac{a}{p}\right) \left(\frac{a}{q}\right)$. Thus if $\left(\frac{c}{N}\right) = -1$ we know that the plaintext bit was 1. Thus we can write a script to reveal the plaintext:
+We can divide by $2^e$ each ciphertexts and test with the [Jacobi symbol](https://en.wikipedia.org/wiki/Jacobi_symbol) if the number is a square modulo $N$ or not. The Jacobi symbol $\left(\frac{a}{p}\right)$ for a prime number $p$ is defined to be 1 if $a$ is a square and -1 if not. For our case $\left(\frac{a}{N}\right) = \left(\frac{a}{p}\right) \left(\frac{a}{q}\right)$. Thus if $\left(\frac{c}{N}\right) = -1$ we know that the plaintext bit was 1. Thus we can write a script to reveal the plaintext:
 
 ```python
 #!/usr/bin/env python3
