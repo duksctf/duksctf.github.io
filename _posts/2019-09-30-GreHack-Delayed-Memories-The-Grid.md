@@ -7,29 +7,7 @@ date: 2019-09-30
 
 ---
 
-<style type="text/css">
-.ansi2html-content { display: inline; white-space: pre-wrap; word-wrap: break-word; }
-.body_foreground { color: #AAAAAA; }
-.body_background { background-color: #000000; }
-.body_foreground > .bold,.bold > .body_foreground, body.body_foreground > pre > .bold { color: #FFFFFF; font-weight: normal; }
-.inv_foreground { color: #000000; }
-.inv_background { background-color: #AAAAAA; }
-.inv_foreground { color: #000000; }
-.ansi1 { font-weight: bold; }
-.ansi31 { color: #aa0000; }
-.ansi32 { color: #00aa00; }
-.ansi33 { color: #aa5500; }
-.ansi34 { color: #0000aa; }
-.ansi38-0 { color: #000316; }
-.ansi38-19 { color: #00007e; }
-.inv38-19 { background: #00007e; }
-.ansi38-22 { color: #002a00; }
-.ansi38-58 { color: #2a2a00; }
-.ansi38-204 { color: #d22a54; }
-.ansi38-136 { color: #7e5400; }
-</style>
-
-* Three different way to solve a reverse challenge. *
+*Reverse challenge which is finally a maze. The combination which gets out of the maze is the flag.*
 
 <!--more-->
 
@@ -147,7 +125,7 @@ solve it.
 ### First method
 
 We first noticed that the given argument should be 11 characters long or the program exits:
-```
+```assembly
 0x0000126b      31c0           xor eax, eax                ; arg2                                                                                                                            
 0x0000126d      f2ae           repne scasb al, byte [rdi]                                                                                                                                    
 0x0000126f      4883f9f3       cmp rcx, 0xfffffffffffffff3                                                                                                                                   
@@ -221,3 +199,45 @@ You can't go there!
 We noticed that some **X** characters appear at the end of the maze. After playing a bit with
 the argument we supose that the goal was to move up to the top of the maze and each character
 would make a move of the cursor in the maze.
+
+```Assembly
+0x555555555275      mov dil, byte [rbx]
+0x555555555278      test dil, dil
+0x55555555527b      je 0x5555555552b7
+0x55555555527d      shr edi, 6
+0x555555555280      inc rbx
+0x555555555283      and edi, 3
+0x555555555286      call 0x5555555551fa
+0x55555555528b      movsx edi, byte [rbx - 1]
+0x55555555528f      sar edi, 4
+0x555555555292      and edi, 3
+0x555555555295      call 0x5555555551fa
+0x55555555529a      movsx edi, byte [rbx - 1]
+0x55555555529e      sar edi, 2
+0x5555555552a1      and edi, 3
+0x5555555552a4      call 0x5555555551fa
+0x5555555552a9      mov dil, byte [rbx - 1]
+0x5555555552ad      and edi, 3
+0x5555555552b0      call 0x5555555551fa
+0x5555555552b5      jmp 0x555555555275
+```
+
+We noticed that he character is first right shifted by 6 and only the two last bits are kept. Then a function is called.
+Then the character is shifted by 4 and the two last bits are kept and the same function is called and so on. Thus we supposed that 
+the function at **0x5555555551fa** was a move function which takes 2 bits of the character as input.
+
+After debugging a bit with several character we could figure out which move matches which 2-bit value:
+
+|----|------------|
+|0   | **Left**   |
+|1   | **Up**     |
+|2   | **Right**  |
+|3   | **Down**   |
+
+Notice that one character was **@** and to pass it as a parameter in radare2 you have to use a double quote else it is interpreted as an address:
+
+```bash
+[0x000010c0]> "ood @abcdefghijkl"
+Process with PID 6486 started...
+= attach 6486 6486
+```
