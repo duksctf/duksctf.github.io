@@ -7,6 +7,28 @@ date: 2019-09-30
 
 ---
 
+<style type="text/css">
+.ansi2html-content { display: inline; white-space: pre-wrap; word-wrap: break-word; }
+.body_foreground { color: #AAAAAA; }
+.body_background { background-color: #000000; }
+.body_foreground > .bold,.bold > .body_foreground, body.body_foreground > pre > .bold { color: #FFFFFF; font-weight: normal; }
+.inv_foreground { color: #000000; }
+.inv_background { background-color: #AAAAAA; }
+.inv_foreground { color: #000000; }
+.ansi1 { font-weight: bold; }
+.ansi31 { color: #aa0000; }
+.ansi32 { color: #00aa00; }
+.ansi33 { color: #aa5500; }
+.ansi34 { color: #0000aa; }
+.ansi38-0 { color: #000316; }
+.ansi38-19 { color: #00007e; }
+.inv38-19 { background: #00007e; }
+.ansi38-22 { color: #002a00; }
+.ansi38-58 { color: #2a2a00; }
+.ansi38-204 { color: #d22a54; }
+.ansi38-136 { color: #7e5400; }
+</style>
+
 * Three different way to solve a reverse challenge. *
 
 <!--more-->
@@ -57,7 +79,7 @@ subsys   linux
 va       true
 ```
 
-Neverthe less the strings were interesting:
+Nevertheless the strings were interesting:
 
 ```
 [0x000010c0]> iz
@@ -119,10 +141,83 @@ nth paddr      vaddr      len size section type  string
 ```
 
 They seems to represent a maze.
-We were three people to participate to the challenge and we found three diffrent method to
+We were three people to participate to the challenge and we found three different method to
 solve it.
 
 ### First method
 
+We first noticed that the given argument should be 11 characters long or the program exits:
+```
+0x0000126b      31c0           xor eax, eax                ; arg2                                                                                                                            
+0x0000126d      f2ae           repne scasb al, byte [rdi]                                                                                                                                    
+0x0000126f      4883f9f3       cmp rcx, 0xfffffffffffffff3                                                                                                                                   
+0x00001273      7556           jne 0x12cb
+```
 
+Then the program iterate over each characters of the argument until it reaches the null character:
+<img src="/resources/2019/grehack/thegrid/move_code.png" width="800">
 
+For each character, the
+```
+[0x7ffff7dd6090]> ood aaaaaaaaaaa
+Wait event received by different pid 22071
+Process with PID 22072 started...
+= attach 22072 22072
+[0x7ffff7dd6090]> dc
+hit breakpoint at: 55555555527d
+[0x55555555527d]> dc
+You can't go there!
+[0x555555558060]> b 1130
+[0x555555558060]> s 0x555555558060; psb
+0x555555558060 OOOOAOO|||||OOOOOOOOOOO
+0x555555558077 OO OOOO|||||OOOOO OOOOO
+0x55555555808f OO OAOA|||||OOOOO OOOOO
+0x5555555580a7 O  OOOO|          !!OOO
+0x5555555580bf O OOOOO| |!!!!!!!!!!OOO
+0x5555555580d7 O O//OA| |!!!!!!!!!!OOO
+0x5555555580ef O O//OO|        !!!!OOO
+0x555555558107 O OOOOO|||!!!!! !!!!OOO
+0x55555555811f O OOOOO|||||AAA AAOOOOO
+0x555555558137 O     ||||||AAA AAOOOOO
+0x55555555814f O---- ||||||AAA      OO
+0x555555558167 OOO|  ||||||AAAAAAOO OO
+0x55555555817f OOO| |||||||AAAAAAOO OO
+0x555555558197 OOO| |OOA|AAAAAAAAOO OO
+0x5555555581af OOO| |OOA|AAAAAAAAOO OO
+0x5555555581c7 OOO| |OOO|||||||||OO OO
+0x5555555581df OOO| |_____OO|||||OO OO
+0x5555555581f7 OOO|       |O|||||OO OO
+0x55555555820f OOO------| |O|||||OO OO
+0x555555558227 OOXXXXXXO| |O|||||   OO
+0x55555555823f OOO//XXXO|         OOOO
+0x555555558257 OOO//XXXO| OO|||||OOOOO
+0x55555555826f OOO!!XXXO| OO|||||OOOOO
+0x555555558287 OOO!!XXXO  OO||//////OO
+0x55555555829f OOO!!OOOO OOO||//////OO
+0x5555555582b7 OO        OOO|||||||OOO
+0x5555555582cf OO !!OO OOOOO|||||O|OOO
+0x5555555582e7 OO !!OO OOOOO|||||O|OOO
+0x5555555582ff OO !!OO OOOOOOOOOOO|OOO
+0x555555558317 OO OOOO       OOOOO|OOO
+0x55555555832f OO OOOOOOOOOO OOOOO|OOO
+0x555555558347 OO O|||||OOOO   OOO|OOO
+0x55555555835f OO O|||||OOOOOO OOO|OOO
+0x555555558377 OO O|||||OOOOO  OOO|OOO
+0x55555555838f OO O||||       OOOO|OOO
+0x5555555583a7 OO O|||||OOOOO OOOO|OOO
+0x5555555583bf OO O|||||OOOOO OOOOOOOO
+0x5555555583d7 OO O|||||OOOOO     OOOO
+0x5555555583ef OO  |||||OOOOOOOOO OOOO
+0x555555558407 OOO |||||OOOOOOOOO OOOO
+0x55555555841f OOO         OOOOOO OOOO
+0x555555558437 OOOO|||||OOOOOOOOO OOOO
+0x55555555844f OOOO|||||OOOOOOOOO OOOO
+0x555555558467 OOOO|||||OOOOOOOO  OOOO
+0x55555555847f O////////OOOOOOOO O  XO
+0x555555558497 O////////OOOOOOOO   OXO
+0x5555555584af O////////OOOOOOOOOOOO O
+```
+
+We noticed that some **X** characters appear at the end of the maze. After playing a bit with
+the argument we supose that the goal was to move up to the top of the maze and each character
+would make a move of the cursor in the maze.
