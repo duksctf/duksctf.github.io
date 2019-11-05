@@ -7,7 +7,7 @@ date: 2019-09-30
 
 ---
 
-*Reverse challenge which is finally a maze. The combination which gets out of the maze is the flag.*
+*Reverse challenge which is finally a maze. A move is encoded on 2 bit of a charactere given as input. The combination which gets you out of the maze is the flag.*
 
 <!--more-->
 
@@ -15,13 +15,13 @@ date: 2019-09-30
 
 The flag doesn't follow any particular format.
 
-DOWNLOAD FILE 
+[DOWNLOAD FILE](/resources/2019/grehack/thegrid/thegrid_80f6b0f70565a2de15eab05c3ad603d18399bc2af1eabf870da6f2e4955b2a17)
 
 ### Solution
 
 We were given a [binary](/resources/2019/grehack/thegrid/thegrid_80f6b0f70565a2de15eab05c3ad603d18399bc2af1eabf870da6f2e4955b2a17) without much information.
 
-```bash
+```shell
 $ r2 thegrid_80f6b0f70565a2de15eab05c3ad603d18399bc2af1eabf870da6f2e4955b2a17 
 [0x000010c0]> ia
 arch     x86
@@ -119,23 +119,20 @@ nth paddr      vaddr      len size section type  string
 ```
 
 They seems to represent a maze.
-We were three people to participate to the challenge and we found three different method to
-solve it.
-
-### First method
 
 We first noticed that the given argument should be 11 characters long or the program exits:
-```assembly
-0x0000126b      31c0           xor eax, eax                ; arg2                                                                                                                            
-0x0000126d      f2ae           repne scasb al, byte [rdi]                                                                                                                                    
-0x0000126f      4883f9f3       cmp rcx, 0xfffffffffffffff3                                                                                                                                   
-0x00001273      7556           jne 0x12cb
+```nasm
+0x0000126b          xor eax, eax                ; arg2                                                                                                                            
+0x0000126d          repne scasb al, byte [rdi]                                                                                                                                    
+0x0000126f          cmp rcx, 0xfffffffffffffff3                                                                                                                                   
+0x00001273          jne 0x12cb
 ```
 
 Then the program iterate over each characters of the argument until it reaches the null character:
 <img src="/resources/2019/grehack/thegrid/move_code.png" width="800">
 
-For each character, the
+If a wrong input is given the binary complains:
+
 ```
 [0x7ffff7dd6090]> ood aaaaaaaaaaa
 Wait event received by different pid 22071
@@ -196,11 +193,11 @@ You can't go there!
 0x5555555584af O////////OOOOOOOOOOOO O
 ```
 
-We noticed that some **X** characters appear at the end of the maze. After playing a bit with
-the argument we supose that the goal was to move up to the top of the maze and each character
-would make a move of the cursor in the maze.
+BUt we noticed that some **X** characters appear at the end of the maze. After playing a bit with
+the argument we suposed that the goal was to move up to the top of the maze and each character
+would make a move of the cursor in the maze. According to the assembly:
 
-```Assembly
+```nasm
 0x555555555275      mov dil, byte [rbx]
 0x555555555278      test dil, dil
 0x55555555527b      je 0x5555555552b7
@@ -222,7 +219,7 @@ would make a move of the cursor in the maze.
 0x5555555552b5      jmp 0x555555555275
 ```
 
-We noticed that he character is first right shifted by 6 and only the two last bits are kept. Then a function is called.
+We noticed that the character is first right shifted by 6 and only the two last bits are kept. Then a function is called.
 Then the character is shifted by 4 and the two last bits are kept and the same function is called and so on. Thus we supposed that 
 the function at **0x5555555551fa** was a move function which takes 2 bits of the character as input.
 
@@ -236,8 +233,12 @@ After debugging a bit with several character we could figure out which move matc
 
 Notice that one character was **@** and to pass it as a parameter in radare2 you have to use a double quote else it is interpreted as an address:
 
-```bash
-[0x000010c0]> "ood @abcdefghijkl"
+```shell
+[0x000010c0]> "ood LeAd@Ze@VAY"
 Process with PID 6486 started...
 = attach 6486 6486
+[0x7f92a9ded090]> dc
+Nice job!
 ```
+
+And the parameter is the flag to submit.
