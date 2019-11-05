@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "GreHAck 2019 - Delayed Memories - The Grid"
+title: "GreHack 2019 - Delayed Memories - The Grid"
 mathjax: true
 
 date: 2019-09-30
@@ -118,7 +118,7 @@ nth paddr      vaddr      len size section type  string
 47  0x000034c8 0x000044c8 23  24   .data   ascii OOOOOOOOOOOOOOOOOOOOOOO
 ```
 
-Indeed, it seems that the combination of some strings were repsetning a maze.
+Indeed, it seems that the combination of some strings were representing a maze.
 
 We first noticed that the given argument should be 11 characters long or the program exits:
 ```nasm
@@ -194,13 +194,72 @@ You can't go there!
 ```
 
 We noticed that some **X** characters appear at the end of the maze. After playing a bit with
-the argument we suposed that the goal was to move up to the top of the maze and each character
+the argument we supposed that the goal was to move up to the top of the maze and each character
 would make a move of the cursor in the maze.
 
 Three different methods were used to solve this challenge:
 
 ## 1. angr
-//MOFO
+
+angr tool can be used to solve the challenge with the challenge without reversing. Here is the script.
+
+```python
+#!/usr/bin/env python3
+
+import angr
+import claripy
+
+def debug_stuff():
+
+    """
+    for debugging, can use killmyself() when doing ctrl+c -> Ipython shell
+    only one time is working
+
+    """
+
+    import signal
+    import os
+
+    def killmyself():
+        os.system('kill %d' % os.getpid())
+
+    def sigint_handler(signum, frame):
+        print ('Stopping Execution for Debug. If you want to kill the programm issue: killmyself()')
+        if not "IPython" in sys.modules:
+            import IPython
+            IPython.embed()
+
+    signal.signal(signal.SIGINT, sigint_handler)
+
+    # simple logging stub to debug
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
+
+path_to_binary = "the_grid1"
+p = angr.Project("./" + path_to_binary, load_options={"auto_load_libs":False})
+
+# here im using a symbolic value for argv[1], the size should be 8*real size because it's in bits
+password0_size_in_bits = 8*11
+password0 = claripy.BVS('password0', password0_size_in_bits)
+
+
+# here we create a state starting at main, with a argv[0] and 1, mandatory to pass first check
+state = p.factory.entry_state(args=[path_to_binary, password0])
+​
+# create a simulation object
+s = p.factory.simgr(state)
+
+# use the explore analysis for basic block
+s.explore(find=0x0004010A9 ,avoid=[0x00401096]) 
+
+if s.found:
+    solution_state = s.found[0]
+    print(solution_state.solver.eval(password0, cast_to=bytes))
+
+else:
+    print(f"s failed: {s}")
+```
+
 
 ## 2. radare2
 A possible alternative to angr is to use the debugging capabilities of radare2 through the r2pipe APIs which allows to send a string parameter describing the r2 command to run and get the result back as a string.
@@ -215,7 +274,7 @@ However, this did not le@d to the solution for two reasons:
 
 * Some characters such as **@** were not accepted as an argument by radare2 as they were interpreted before. To circumvent the problem, there is two possibilities:
 
-  * **RTFM** were it is explained that the whole command should be surrounded by double quote (obviously...)
+  * **RTFM** were it is explained that the whole command should be surrounded by double quote (obviously ...)
   ```shell
   r2> "ood @rgument"
   ```
@@ -363,7 +422,62 @@ After debugging a bit with several character we could figure out which move matc
 |2   | **Right**  |
 |3   | **Down**   |
 
-Notice that one character was **@** and to pass it as a parameter in radare2 you have to use a double quote else it is interpreted as an address:
+Thus for example, the character **L** is **01 00 11 00** in binary and we will move with **Up**, **Left**, **Down** and **Left**. After playing in the maze and verifying that we were moving the right way:
+
+```
+[0x7ffff7ea0946]> b 1130
+[0x7ffff7ea0946]> s 0x555555558060; psb
+0x555555558060 OOOOAOO|||||OOOOOOOOOOO
+0x555555558077 OO OOOO|||||OOOOO OOOOO
+0x55555555808f OO OAOA|||||OOOOO OOOOO
+0x5555555580a7 O  OOOO|          !!OOO
+0x5555555580bf O OOOOO| |!!!!!!!!!!OOO
+0x5555555580d7 O O//OA| |!!!!!!!!!!OOO
+0x5555555580ef O O//OO|        !!!!OOO
+0x555555558107 O OOOOO|||!!!!! !!!!OOO
+0x55555555811f O OOOOO|||||AAA AAOOOOO
+0x555555558137 O     ||||||AAA AAOOOOO
+0x55555555814f O---- ||||||AAA      OO
+0x555555558167 OOO|  ||||||AAAAAAOO OO
+0x55555555817f OOO| |||||||AAAAAAOO OO
+0x555555558197 OOO| |OOA|AAAAAAAAOO OO
+0x5555555581af OOO| |OOA|AAAAAAAAOO OO
+0x5555555581c7 OOO| |OOO|||||||||OO OO
+0x5555555581df OOO| |_____OO|||||OO OO
+0x5555555581f7 OOO|      X|O|||||OO OO
+0x55555555820f OOO------|X|O|||||OO OO
+0x555555558227 OOXXXXXXO|X|O|||||   OO
+0x55555555823f OOO//XXXO|X        OOOO
+0x555555558257 OOO//XXXO|XOO|||||OOOOO
+0x55555555826f OOO!!XXXO|XOO|||||OOOOO
+0x555555558287 OOO!!XXXOXXOO||//////OO
+0x55555555829f OOO!!OOOOXOOO||//////OO
+0x5555555582b7 OO     XXXOOO|||||||OOO
+0x5555555582cf OO !!OOXOOOOO|||||O|OOO
+0x5555555582e7 OO !!OOXOOOOO|||||O|OOO
+0x5555555582ff OO !!OOXOOOOOOOOOOO|OOO
+0x555555558317 OO OOOOXXXXXXXOOOOO|OOO
+0x55555555832f OO OOOOOOOOOOXOOOOO|OOO
+0x555555558347 OO O|||||OOOOXXXOOO|OOO
+0x55555555835f OO O|||||OOOOOOXOOO|OOO
+0x555555558377 OO O|||||OOOOOXXOOO|OOO
+0x55555555838f OO O||||      XOOOO|OOO
+0x5555555583a7 OO O|||||OOOOOXOOOO|OOO
+0x5555555583bf OO O|||||OOOOOXOOOOOOOO
+0x5555555583d7 OO O|||||OOOOOXXXXXOOOO
+0x5555555583ef OO  |||||OOOOOOOOOXOOOO
+0x555555558407 OOO |||||OOOOOOOOOXOOOO
+0x55555555841f OOO         OOOOOOXOOOO
+0x555555558437 OOOO|||||OOOOOOOOOXOOOO
+0x55555555844f OOOO|||||OOOOOOOOOXOOOO
+0x555555558467 OOOO|||||OOOOOOOOXXOOOO
+0x55555555847f O////////OOOOOOOOXOXXXO
+0x555555558497 O////////OOOOOOOOXXXOXO
+0x5555555584af O////////OOOOOOOOOOOO O
+
+```
+
+We finally reached the end of the maze:
 
 ```shell
 [0x000010c0]> "ood LeAd@Ze@VAY"
