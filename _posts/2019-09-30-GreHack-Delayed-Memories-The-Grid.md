@@ -118,7 +118,7 @@ nth paddr      vaddr      len size section type  string
 47  0x000034c8 0x000044c8 23  24   .data   ascii OOOOOOOOOOOOOOOOOOOOOOO
 ```
 
-They seems to represent a maze.
+Indeed, it seems that the combination of some strings were repsetning a maze.
 
 We first noticed that the given argument should be 11 characters long or the program exits:
 ```nasm
@@ -193,9 +193,141 @@ You can't go there!
 0x5555555584af O////////OOOOOOOOOOOO O
 ```
 
-BUt we noticed that some **X** characters appear at the end of the maze. After playing a bit with
+We noticed that some **X** characters appear at the end of the maze. After playing a bit with
 the argument we suposed that the goal was to move up to the top of the maze and each character
-would make a move of the cursor in the maze. According to the assembly:
+would make a move of the cursor in the maze.
+
+Three different methods were used to solve this challenge:
+
+## 1. angr
+//MOFO
+
+## 2. radare2
+A possible alternative to angr is to use the debugging capabilities of radare2 through the r2pipe APIs which allows to send a string parameter describing the r2 command to run and get the result back as a string.
+
+The initial idea was to identify how many **X** are present in memory before any new character is tested, then iterate of a charset of printables for each position by keeping only the best candidates, meaning the ones with most **X** present in the maze.
+
+However, this did not le@d to the solution for two reasons:
+
+* "You can't go there" is displayed while the character is processed whenever a wall is hit.
+
+  To resolve this issue, it is required to catch the output of the program to confirm a wall was hit or not.
+
+* Some characters such as **@** were not accepted as an argument by radare2 as they were interpreted before. To circumvent the problem, there is two possibilities:
+
+  * **RTFM** were it is explained that the whole command should be surrounded by double quote (obviously...)
+  ```shell
+  r2> "ood @rgument"
+  ```
+
+  * Load the program with a dummy argument and replace it when the program is loaded :)
+
+Long story short, below is the python2 script to solve the maze (ASLR disabled): 
+
+
+```python
+import r2pipe
+import string
+
+charset = string.printable
+
+def test_candidates (p,y):
+    l = []
+    # Initial pattern 
+    for s in p:
+        # argument = good char + test char + padding
+        arg=s + "A"*(11-y)
+        
+        print "[Testing] " + arg
+        
+        # Launching r2 with debug/write mode enable
+        r = r2pipe.open("thegrid_80f6b0f70565a2de15eab05c3ad603d18399bc2af1eabf870da6f2e4955b2a17", flags=["-d","-w"])
+        
+        # Reload with arguments
+        r.cmd('ood ' + "A"*11)
+        
+        # Analyze binary
+        r.cmd('aaaa')
+        
+        # Continue execution until argument is in rdi register
+        r.cmd('dcu main+0x1f1')
+        
+        # Dump register address
+        rdi=r.cmd('dr rdi')
+        
+        # Seek rdi
+        r.cmd('s ' + rdi)
+
+        # Write the real argument to be tested @rdi
+        t=arg.encode("hex")
+        r.cmd('w '+ ''.join(['\\x'+t[u:u+2] for u in range(0,len(t),2)]))
+
+        # Continue execution until the test loop
+        r.cmd('dcu main+0x20d')
+
+        # Perform y times the loop, before new chars are tested
+        for u in range(y):
+            r.cmd('dcu main+0x20d')
+
+        # Dump memory and identify how many X were added
+        smem = r.cmd('fs strings; f').split("\n")[4].split(" ")[0]
+        v=(r.cmd('pr 1152 @'+smem).replace("\x00","\n")).count('X')
+
+        # Testing loop
+        for x in charset:
+            # argument = good char + test char + padding
+            arg=s + x + "A"*(11-y-1)
+
+            # Launch r2 with debug/write mode enbale
+            r = r2pipe.open("thegrid_80f6b0f70565a2de15eab05c3ad603d18399bc2af1eabf870da6f2e4955b2a17", flags=["-d","-w"])
+
+            # Reload with arguments
+            r.cmd('ood ' + "A"*11)
+
+            # Seek rdi
+            r.cmd('s ' + rdi)
+
+            # Write the real argument to be tested @rdi
+            t=arg.encode("hex")
+            r.cmd('w '+ ''.join(['\\x'+t[u:u+2] for u in range(0,len(t),2)]))
+
+            # Continue execution until the test loop
+            r.cmd('dcu main+0x20d')
+
+            # Perform y+1 times the loop to test the new char
+            for u in range(y+1):
+                w=r.cmd('dcu main+0x20d')
+
+            buf=r.cmd('pr 1152 @'+smem).replace("\x00","\n")
+
+            # print buf 
+            # If error message is not displayed and more X than the initial pattern add it to the candidates
+            if "can't" not in w and buf.count('X') > v:
+                print "\t[GOOD] " + arg + "\n\n"
+                l.append(arg[:y+1])
+            # If argument is correct, "Nice job" is displayed meaning that the flag was found
+            if "Nice" in w:
+                print "\n\n[FLAG] " + arg
+                exit()
+            # /!\\ Don't forget to quit the current r2 process or you'll have an invasion of zombie processes
+            r.quit()
+    # Return list of candidates
+    return l
+
+flag = ""
+candidates = [flag]
+
+for y in range(len(flag),12):
+    candidates = test_candidates(candidates,y)
+    print "[CANDIDATES] "
+    print candidates
+
+```
+
+
+## 3. ReverseFu
+
+According to the assembly:
 
 ```nasm
 0x555555555275      mov dil, byte [rbx]
