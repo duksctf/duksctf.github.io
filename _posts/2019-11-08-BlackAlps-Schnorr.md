@@ -7,7 +7,7 @@ date: 2019-11-08
 
 ---
 
-*Schnorr signature with a Blum-Blum-Schub PRNG to generate the nonce. Since the quadratic equation can be solves in the group the private key can be recover from two consecutive signatures.*
+*Schnorr signature with a Blum-Blum-Schub PRNG to generate the nonce. Since the quadratic equation can be solved in the prime group the private key can be recover from two consecutive signatures.*
 
 <!--more-->
 

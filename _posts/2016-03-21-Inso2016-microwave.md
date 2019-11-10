@@ -20,7 +20,7 @@ Following binaries were given:
         <li><em>microwave_61f50dba931bb10ab3089215b2e188f4</em></li>
         <li><em>libc.so.6</em></li>
 </ul>
-Those are both available <a href="https://github.com/deadc0de6/ctf/tree/master/2016-insomnihack">here</a>
+Those are both available [here](https://gitlab.com/deadc0de6/ctf/tree/master/2016-insomnihack)
 <h2 id="the-program">The program</h2>
 The program simulates a microwave able to connect to twitter and tweets your favorite food.
 
