@@ -7,7 +7,7 @@ date: 2019-09-30
 
 ---
 
-*Reverse challenge which is finally a maze. A move is encoded on 2 bit of a charactere given as input. The combination which gets you out of the maze is the flag.*
+*Reverse challenge which is finally a maze. A move is encoded on 2 bit of a character given as input. The combination which gets you out of the maze is the flag. We present here three different ways to solve the challenge.*
 
 <!--more-->
 
@@ -118,7 +118,7 @@ nth paddr      vaddr      len size section type  string
 47  0x000034c8 0x000044c8 23  24   .data   ascii OOOOOOOOOOOOOOOOOOOOOOO
 ```
 
-Indeed, it seems that the combination of some strings were representing a maze.
+Indeed, it seems that some strings were representing a maze.
 
 We first noticed that the given argument should be 11 characters long or the program exits:
 ```nasm
@@ -260,6 +260,7 @@ else:
     print(f"s failed: {s}")
 ```
 
+The script will output the flag after 10 to 20 seconds.
 
 ## 2. radare2
 A possible alternative to angr is to use the debugging capabilities of radare2 through the r2pipe APIs which allows to send a string parameter describing the r2 command to run and get the result back as a string.
