@@ -8,7 +8,7 @@ For ubuntu:
 
 ```bash
 sudo apt-get update
-sudo apt-get install ruby2.2 ruby-dev rubygems
+sudo apt-get install ruby ruby-dev rubygems
 ```
 Install bundler:
 
