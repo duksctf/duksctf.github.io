@@ -1,4 +1,4 @@
-Repo for duksctf.github.io blog.
+Repo for duksctf.github.io blog - An Amazing Project.
 
 # Guideline to install jekyll and play locally before pushing stuff
 
