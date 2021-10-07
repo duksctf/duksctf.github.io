@@ -9,7 +9,7 @@ theme: jekyll-theme-hacker
 url: "https://noman-aziz.github.io/ctf-writeups" 
 
 # logo
-avatar: /assets/images/jekyll-logo.svg 
+avatar: /ctf-writeups/assets/images/jekyll-logo.svg 
 
 excerpt_separator: <!--more-->
 
