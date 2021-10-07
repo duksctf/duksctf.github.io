@@ -1,1 +1,1 @@
-# Repo for https://noman-aziz.github.io/TryHackMe-Writeups/ blog.
+## Repo for https://noman-aziz.github.io/tryhackme-writeups/ blog.
