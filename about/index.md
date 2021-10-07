@@ -5,4 +5,4 @@ title: about
 
 # about 
 
-I love playing CTFs to have fun, learn something new and most importantly polish my skills.
+I love playing CTFs to learn something new and most importantly to have fun.
