@@ -6,7 +6,7 @@ google_analytics:
 theme: jekyll-theme-hacker
 
 # needed for jekyll-sitemap generator
-url: "https://github.com/Noman-Aziz/ctf-writeups" 
+url: "https://noman-aziz.github.io/ctf-writeups" 
 
 # logo
 avatar: /assets/images/jekyll-logo.svg 
