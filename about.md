@@ -4,5 +4,4 @@ title: About
 permalink: /about/
 ---
 
-duks is a CTF team composed of people from [Kudelski Security](https://www.kudelskisecurity.com),
-playing to learn and have fun
+I love playing CTFs to have fun, learn something new and most importantly polish my skills.

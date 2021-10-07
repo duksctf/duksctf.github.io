@@ -1,12 +1,12 @@
-title: duksctf
-description: Bunch of sec. enthusiasts who sometimes play CTF 
+title: CTF Writeups
+description: My personal writeups for CTF
 encoding: UTF-8
 show_downloads: false
 google_analytics:
 theme: jekyll-theme-hacker
 
 # needed for jekyll-sitemap generator
-url: "https://duksctf.github.io" 
+url: "https://github.com/Noman-Aziz/ctf-writeups" 
 
 # logo
 avatar: /assets/images/jekyll-logo.svg 
