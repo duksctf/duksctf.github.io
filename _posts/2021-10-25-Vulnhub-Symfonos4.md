@@ -9,7 +9,7 @@ date: 2021-10-25
 *LFI vulnerability lead to reverse shell on the target machine and an Insecure deserialization vulnerability in python's jsonpickle module lead to privilege escalation*
 <!--more-->
 
-***
+
 ## **Description**
 
 Name: symfonos: 4
@@ -19,13 +19,13 @@ Difficulty: Intermediate
 Tested: VirtualBox
 
 DHCP Enabled
-***
+
 ## **Details**
 
 Machine Link: https://www.vulnhub.com/entry/symfonos-4,347/
 
 Category:    Web Application | Boot2Root
-***
+
 ## **Solution**
 
 ### Discovering Device
@@ -242,4 +242,3 @@ We have successfully gotten a reverse shell on the target machine with root user
 
 <img src="/resources/2021/symfonos4/30.png" width="800">
 
-***
