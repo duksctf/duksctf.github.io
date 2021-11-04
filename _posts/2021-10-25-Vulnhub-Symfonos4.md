@@ -31,7 +31,7 @@ Category:    Web Application | Boot2Root
 ### Discovering Device
 After importing and starting the virtual machine, first we run **netdiscover** to identify devices on our network.
 
-<img src="/resources/2021/symfonos4/1.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/1.png" width="800">
 
 One of the devices is our target machine and the other one is a mobile device running a wifi hotspot.
 
@@ -43,7 +43,7 @@ To identify our target device, we run **nmap** port scan to identify the target 
 └─$ sudo nmap -sV -O -A 192.168.90.59
 ```
 
-<img src="/resources/2021/symfonos4/2.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/2.png" width="800">
 
 ```
 PORT STATE SERVICE VERSION
@@ -72,7 +72,7 @@ First we use **nikto** to initiate a web server vulnerability scan.
 └─$ nikto -host http://192.168.90.59/
 ```
 
-<img src="/resources/2021/symfonos4/3.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/3.png" width="800">
 
 ```
 + Server: Apache/2.4.38 (Debian)
@@ -106,43 +106,43 @@ Now, we enumerate web directories and files using **gobuster**
 └─$ gobuster dir --url http://192.168.90.59/ --wordlist /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php,html,txt -q
 ```
 
-<img src="/resources/2021/symfonos4/4.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/4.png" width="800">
 
 We have identified a directory named `gods`. Let's take a look at the contents,
 
-<img src="/resources/2021/symfonos4/5.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/5.png" width="800">
 
 Let's take a look at hades.log.
 
-<img src="/resources/2021/symfonos4/6.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/6.png" width="800">
 
 These files contain no interesting content. We can see another file `/atlantis.php` and upon visiting this file, we have found a login panel.
 
-<img src="/resources/2021/symfonos4/7.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/7.png" width="800">
 
 We have found ourselves a login panel.
 
 ### Bypassing Login
 After trying out different sql injections, this login panel was successfully bypassed by using a sql injection.
 
-<img src="/resources/2021/symfonos4/8.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/8.png" width="800">
 
 After logging in, web server redirects us to ‘/sea.php’ web file
 
-<img src="/resources/2021/symfonos4/9.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/9.png" width="800">
 
 If we select a god, we can see that it displays the content from the ‘/gods/’ directory that we found out earlier.   
 
-<img src="/resources/2021/symfonos4/10.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/10.png" width="800">
 
 By looking at the url, we can see that it is accessing the log file from the `/gods` directory. This gives us a solid hint that this web server is vulnerable to Local File Intrusion (**LFI**) vulnerability.
 
-<img src="/resources/2021/symfonos4/11.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/11.png" width="800">
 
 ### LFI Exploitation
 Moving forward, we can use LFI to read system files and try to find our way into the target machine. Since the url is reading *.log files, first we try to read different log files and `/var/log/auth.log` is readable. Let us try logging in via ssh with an invalid user bot
 
-<img src="/resources/2021/symfonos4/12.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/12.png" width="800">
 
 We can see that it was logged in this file. By knowing this, we can try the following payload to be able to run commands on the target machine.
 
@@ -153,29 +153,29 @@ We can see that it was logged in this file. By knowing this, we can try the foll
 
 This exploit basically includes malicious code in the logs file. We can then use the `cmd` parameter to execute custom commands. We can confirm this by running the `ls` command as shown below.
 
-<img src="/resources/2021/symfonos4/13.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/13.png" width="800">
 
-<img src="/resources/2021/symfonos4/14.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/14.png" width="800">
 
 Now, we can use this to get a reverse shell on our machine. Netcat does not seem to work on the target machine due to some reason, so now, we will upload a php reverse shell to the target machine. We will use python web server to download the php reverse on the target machine `/tmp` directory.
 
-<img src="/resources/2021/symfonos4/15.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/15.png" width="800">
 
-<img src="/resources/2021/symfonos4/16.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/16.png" width="800">
 
 Now, we will setup a netcat listener on our machine and execute our payload on target machine
 
-<img src="/resources/2021/symfonos4/17.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/17.png" width="800">
 
 We have successfully gotten a reverse shell on the target machine
 
-<img src="/resources/2021/symfonos4/18.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/18.png" width="800">
 
 Now, we will stabilize our shell using python. 
 
-<img src="/resources/2021/symfonos4/19.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/19.png" width="800">
 
-<img src="/resources/2021/symfonos4/20.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/20.png" width="800">
 
 ### Privilege Escalation
 First we will use this one liner to download **linux smart enumeration** script on `/tmp` directory. 
@@ -186,7 +186,7 @@ wget "https://github.com/diego-treitos/linux-smart-enumeration/raw/master/lse.sh
 
 Running linux smart enumeration script on our target machine tells us that there is **hidden web server** and mysql server running on target machine which can only be accessed from the inside     
 
-<img src="/resources/2021/symfonos4/21.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/21.png" width="800">
 
 We will use **socat** to forward port 8080 on port 4444 since it was already installed on the target machine
 
@@ -196,7 +196,7 @@ socat TCP-LISTEN:4444,fork,reuseaddr tcp:127.0.0.1:8080 &
 
 Now, we can successfully access this hidden web server on port 4444
 
-<img src="/resources/2021/symfonos4/22.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/22.png" width="800">
 
 Main page doesn't tell us anything important, but if we see the cookie in the network tab of our browser, we can see some interesting details.   
 
@@ -206,19 +206,19 @@ Cookie: PHPSESSID=r14sp8fvvk614cptufe8abmv8g; username=eyJweS9vYmplY3QiOiAiYXBwL
 
 We can see that username is base64 encoded, decoding it gives us   
 
-<img src="/resources/2021/symfonos4/23.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/23.png" width="800">
 
 This tells us that there is a python flask server running with the user “Poseidon”. We will now try to find the `app.py` to look at the source code.  
 
-<img src="/resources/2021/symfonos4/24.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/24.png" width="800">
 
 The app is present in the `/opt/code` directory. After looking at the source code, we can see that it is importing some libraries and most importantly in our case `jsonpickle`
 
-<img src="/resources/2021/symfonos4/25.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/25.png" width="800">
 
 A simple `searchsploit jsonpickle` tells us about an **insecure deserialization** RCE vulnerability
 
-<img src="/resources/2021/symfonos4/26.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/26.png" width="800">
 
 We can give custom commands to the cookie that was being set earlier and have ourselves an RCE on the machine. A simple google search on jsonpickle exploit gives us the following shell code which is just using python os module to execute netcat command with uid 0 which is of root.   
 
@@ -228,17 +228,17 @@ We can give custom commands to the cookie that was being set earlier and have ou
 
 After base64 encoding it,
 
-<img src="/resources/2021/symfonos4/27.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/27.png" width="800">
 
 Now, we will again send a request to the server using `curl` using our spoofed cookie and start a netcat listener on our machine.
 
-<img src="/resources/2021/symfonos4/28.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/28.png" width="800">
 
 We have successfully gotten a reverse shell on the target machine with root user
 
-<img src="/resources/2021/symfonos4/29.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/29.png" width="800">
 
 ### Capturing the Flag
 
-<img src="/resources/2021/symfonos4/30.png" width="800">
+<img src="https://noman-aziz.github.io/ctf-writeups/resources/2021/symfonos4/30.png" width="800">
 
