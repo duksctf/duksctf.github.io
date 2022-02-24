@@ -1,45 +1,45 @@
 const fonts = {
 	coptic: {
 		// The script the Gnostic codices were written in
-		glyphTexURL: "assets/coptic_msdf.png",
+		glyphTexURL: "assets/matrix/coptic_msdf.png",
 		glyphSequenceLength: 32,
 		glyphTextureGridSize: [8, 8],
 	},
 	gothic: {
 		// The script the Codex Argenteus was written in
-		glyphTexURL: "assets/gothic_msdf.png",
+		glyphTexURL: "assets/matrix/gothic_msdf.png",
 		glyphSequenceLength: 27,
 		glyphTextureGridSize: [8, 8],
 	},
 	matrixcode: {
 		// The glyphs seen in the film trilogy
-		glyphTexURL: "assets/matrixcode_msdf.png",
+		glyphTexURL: "assets/matrix/matrixcode_msdf.png",
 		glyphSequenceLength: 57,
 		glyphTextureGridSize: [8, 8],
 	},
 	resurrections: {
 		// The glyphs seen in the film trilogy
-		glyphTexURL: "assets/resurrections_msdf.png",
+		glyphTexURL: "assets/matrix/resurrections_msdf.png",
 		glyphSequenceLength: 133,
 		glyphTextureGridSize: [13, 12],
 	},
 	huberfishA: {
-		glyphTexURL: "assets/huberfish_a_msdf.png",
+		glyphTexURL: "assets/matrix/huberfish_a_msdf.png",
 		glyphSequenceLength: 34,
 		glyphTextureGridSize: [6, 6],
 	},
 	huberfishD: {
-		glyphTexURL: "assets/huberfish_d_msdf.png",
+		glyphTexURL: "assets/matrix/huberfish_d_msdf.png",
 		glyphSequenceLength: 34,
 		glyphTextureGridSize: [6, 6],
 	},
 	gtarg_tenretniolleh: {
-		glyphTexURL: "assets/gtarg_tenretniolleh_msdf.png",
+		glyphTexURL: "assets/matrix/gtarg_tenretniolleh_msdf.png",
 		glyphSequenceLength: 36,
 		glyphTextureGridSize: [6, 6],
 	},
 	gtarg_alientext: {
-		glyphTexURL: "assets/gtarg_alientext_msdf.png",
+		glyphTexURL: "assets/matrix/gtarg_alientext_msdf.png",
 		glyphSequenceLength: 38,
 		glyphTextureGridSize: [8, 5],
 	},
