@@ -11,6 +11,7 @@ layout: default
 ---
 
 An enthusiastic cyber security individual, eager to learn new things, having great interest and hands on experience in Information-Security and Penetration-Testing.
+<br>
 
 ## **Education**
 
@@ -45,7 +46,7 @@ Fast - National University of Computer and Emerging Sciences (NUCES) <br>
 
 - Languages: C/C++, Python, Go, JavaScript, TypeScript
 - Frameworks: ReactJS, Ionic, Firebase, Django, Flask, Docker
-- Linux
+- Linux : Arch, Ubuntu, RedHat
 - Static Source Code Analysis : VisualCodeGrepper, SonarQube
 - Reverse Engineering : Ghidra, IDA
 - Web Pentesting : Burp Suite, ZAP, Gobuster, Nikto, Nessus
@@ -53,7 +54,7 @@ Fast - National University of Computer and Emerging Sciences (NUCES) <br>
 - Operating System Pentesting : Nmap, Metasploit
 - Password Cracking : JohnTheRipper, Hashcat, Hydra
 - OSINT : Maltego, Google Dorks, Shodan, Recon-Ng, TheHarvester
-  <br>
+<br>
 
 ## **Accomplishments**
 
@@ -62,7 +63,7 @@ Fast - National University of Computer and Emerging Sciences (NUCES) <br>
 ### Ignite Cyber Digital Hackathon, Islamabad - 2021
 - Got **6th/45** position in Application Exploitation (Including Web)
 - Got **4th/35** position in Speed Programming
-  <br>```
+<br>
 
 ## **Projects**
 
@@ -95,7 +96,7 @@ Developing an Automated Penetration Testing software for my FYP.
 ### **Fuzzing and Stress Testing**
 - Fuzzed and Stress Tested an API.
 - Performed Stack Based Buffer Overflow on an application using python, immunity debugger and mona scripts to deliver payload to the os and gain reverse shell.
-  <br>
+<br>
 
 ## **Experience**
 
@@ -119,10 +120,9 @@ Developed and deployed a full IoT system.
 
 ### Cyber Security Internee
 **Protect Lab - (Jul 2021 - Aug 2021) | Islamabad**
+<br>
 
-  <br/>
-
-## Certifications
+## **Certifications**
 
 ---
 
@@ -155,4 +155,4 @@ Developed and deployed a full IoT system.
 - Issuer : Cisco
 - Issued : Sep 2019
 ```
-<br/>
+<br>
