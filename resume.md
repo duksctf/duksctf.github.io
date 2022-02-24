@@ -11,14 +11,14 @@ layout: default
 ---
 
 An enthusiastic cyber security individual, eager to learn new things, having great interest and hands on experience in Information-Security and Penetration-Testing.
-<br>
+<br><br>
 
 ## **Education**
 
 ---
 
-### Bachelor of Science in Computer Science (BSCS) | CGPA : 3.42 <br>
-Fast - National University of Computer and Emerging Sciences (NUCES) <br>
+### Bachelor of Science in Computer Science (BSCS) | CGPA : 3.42 <br><br>
+Fast - National University of Computer and Emerging Sciences (NUCES) <br><br>
 2018-2022 | Islamabad, Pakistan
 
 #### Dean's List of Honors
@@ -38,7 +38,7 @@ Fast - National University of Computer and Emerging Sciences (NUCES) <br>
 - Cloud Security
 - Cloud Computing
 ```
-<br>
+<br><br>
 
 ## **Skills**
 
@@ -54,7 +54,7 @@ Fast - National University of Computer and Emerging Sciences (NUCES) <br>
 - Operating System Pentesting : Nmap, Metasploit
 - Password Cracking : JohnTheRipper, Hashcat, Hydra
 - OSINT : Maltego, Google Dorks, Shodan, Recon-Ng, TheHarvester
-<br>
+<br><br>
 
 ## **Accomplishments**
 
@@ -63,13 +63,13 @@ Fast - National University of Computer and Emerging Sciences (NUCES) <br>
 ### Ignite Cyber Digital Hackathon, Islamabad - 2021
 - Got **6th/45** position in Application Exploitation (Including Web)
 - Got **4th/35** position in Speed Programming
-<br>
+<br><br>
 
 ## **Projects**
 
 ---
 
-### Penetrato - Automated Penetration Testing Software <br>
+### Penetrato - Automated Penetration Testing Software <br><br>
 Developing an Automated Penetration Testing software for my FYP.
 #### Core Modules
 ```
@@ -96,31 +96,31 @@ Developing an Automated Penetration Testing software for my FYP.
 ### **Fuzzing and Stress Testing**
 - Fuzzed and Stress Tested an API.
 - Performed Stack Based Buffer Overflow on an application using python, immunity debugger and mona scripts to deliver payload to the os and gain reverse shell.
-<br>
+<br><br>
 
 ## **Experience**
 
 ---
 
 ### Red Team Member
-**Fast CyberSpace Legion - (Oct 2021 – present) | Islamabad** <br>
+**Fast CyberSpace Legion - (Oct 2021 – present) | Islamabad** <br><br>
 Organizing events and workshops to create awareness among students.
 
 ### Teaching Assistant
-**Fast Nuces - (Sep 2021 - Jan 2022) | Islamabad** <br>
+**Fast Nuces - (Sep 2021 - Jan 2022) | Islamabad** <br><br>
 TA for "Operating Systems" course.
 
 ### CTF Player | [0x9] | Rooms Completed : 86 
-**TryHackMe - (Jun 2021 – Oct 2021)** <br>
+**TryHackMe - (Jun 2021 – Oct 2021)** <br><br>
 Utilized this platform to learn and polish my skills in penetration testing.
 
 ### Full Stack Developer 
-**CONFIDENTIAL - (Apr 2021 – Oct 2021) | Remote** <br>
+**CONFIDENTIAL - (Apr 2021 – Oct 2021) | Remote** <br><br>
 Developed and deployed a full IoT system.
 
 ### Cyber Security Internee
 **Protect Lab - (Jul 2021 - Aug 2021) | Islamabad**
-<br>
+<br><br>
 
 ## **Certifications**
 
@@ -155,4 +155,4 @@ Developed and deployed a full IoT system.
 - Issuer : Cisco
 - Issued : Sep 2019
 ```
-<br>
+<br><br>
