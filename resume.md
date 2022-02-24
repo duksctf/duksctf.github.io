@@ -18,7 +18,7 @@ An enthusiastic cyber security individual, eager to learn new things, having gre
 ---
 
 ### Bachelor of Science in Computer Science (BSCS) | CGPA : 3.42 <br><br>
-Fast - National University of Computer and Emerging Sciences (NUCES) <br><br>
+Fast - National University of Computer and Emerging Sciences (NUCES) <br>
 2018-2022 | Islamabad, Pakistan
 
 #### Dean's List of Honors
@@ -69,7 +69,7 @@ Fast - National University of Computer and Emerging Sciences (NUCES) <br><br>
 
 ---
 
-### Penetrato - Automated Penetration Testing Software <br><br>
+### Penetrato - Automated Penetration Testing Software <br>
 Developing an Automated Penetration Testing software for my FYP.
 #### Core Modules
 ```
@@ -103,19 +103,19 @@ Developing an Automated Penetration Testing software for my FYP.
 ---
 
 ### Red Team Member
-**Fast CyberSpace Legion - (Oct 2021 – present) | Islamabad** <br><br>
+**Fast CyberSpace Legion - (Oct 2021 – present) | Islamabad** <br>
 Organizing events and workshops to create awareness among students.
 
 ### Teaching Assistant
-**Fast Nuces - (Sep 2021 - Jan 2022) | Islamabad** <br><br>
+**Fast Nuces - (Sep 2021 - Jan 2022) | Islamabad** <br>
 TA for "Operating Systems" course.
 
 ### CTF Player | [0x9] | Rooms Completed : 86 
-**TryHackMe - (Jun 2021 – Oct 2021)** <br><br>
+**TryHackMe - (Jun 2021 – Oct 2021)** <br>
 Utilized this platform to learn and polish my skills in penetration testing.
 
 ### Full Stack Developer 
-**CONFIDENTIAL - (Apr 2021 – Oct 2021) | Remote** <br><br>
+**CONFIDENTIAL - (Apr 2021 – Oct 2021) | Remote** <br>
 Developed and deployed a full IoT system.
 
 ### Cyber Security Internee
@@ -155,4 +155,4 @@ Developed and deployed a full IoT system.
 - Issuer : Cisco
 - Issued : Sep 2019
 ```
-<br><br>
+<br>
