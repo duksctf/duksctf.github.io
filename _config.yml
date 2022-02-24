@@ -1,15 +1,15 @@
-title: CTF Writeups
-description: My personal writeups for CTF
+title: Noman Aziz
+description: My personal website
 encoding: UTF-8
 show_downloads: false
 google_analytics:
 theme: jekyll-theme-hacker
 
 # needed for jekyll-sitemap generator
-url: "https://noman-aziz.github.io/ctf-writeups" 
+url: "https://noman-aziz.github.io"
 
 # logo
-avatar: /ctf-writeups/assets/images/jekyll-logo.svg 
+avatar: /assets/images/jekyll-logo.svg
 
 excerpt_separator: <!--more-->
 
@@ -24,4 +24,3 @@ exclude:
   - README.md
   - CNAME
   - vendor
-
