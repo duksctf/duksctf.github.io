@@ -127,25 +127,32 @@ Developed and deployed a full IoT system.
 ---
 
 - Linux Privilege Escalation for OSCP & Beyond!
+
 ```
-  - Issuer : Udemy
-  - Issued : Sep 2021
+- Issuer : Udemy
+- Issued : Sep 2021
 ```
+
 - Offensive Pentesting Learning Path
+
 ```
-  - Issuer : TryHackMe
-  - Issued : Sep 2021
-  - Credential ID : THM-INVCZLVPS4 
+- Issuer : TryHackMe
+- Issued : Sep 2021
+- Credential ID : THM-INVCZLVPS4 
 ```
+
 - Web Fundamentals Learning Path
+
 ```
-  - Issuer : TryHackMe
-  - Issued : Aug 2021
-  - Credential ID : THM-CPVYEQ0GVZ 
+- Issuer : TryHackMe
+- Issued : Aug 2021
+- Credential ID : THM-CPVYEQ0GVZ 
 ```
+
 - Cisco Certified Network Associate Cyber Ops (CCNA)
+
 ```
-  - Issuer : Cisco
-  - Issued : Sep 2019
+- Issuer : Cisco
+- Issued : Sep 2019
 ```
 <br/>
