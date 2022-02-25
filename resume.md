@@ -44,16 +44,76 @@ Fast - National University of Computer and Emerging Sciences (NUCES) <br>
 
 ---
 
-- Languages: C/C++, Python, Go, JavaScript, TypeScript
-- Frameworks: ReactJS, Ionic, Firebase, Django, Flask, Docker
-- Linux : Arch, Ubuntu, RedHat
-- Static Source Code Analysis : VisualCodeGrepper, SonarQube
-- Reverse Engineering : Ghidra, IDA
-- Web Pentesting : Burp Suite, ZAP, Gobuster, Nikto, Nessus
-- Network Pentesting : Aircrack-ng, Wireshark, NetworkMiner, Bettercap
-- Operating System Pentesting : Nmap, Metasploit
-- Password Cracking : JohnTheRipper, Hashcat, Hydra
-- OSINT : Maltego, Google Dorks, Shodan, Recon-Ng, TheHarvester
+### Languages
+```
+- C/C++
+- Python
+- Go
+- JavaScript
+- TypeScript
+```
+### Frameworks
+```
+- ReactJS
+- Ionic
+- Firebase
+- Django
+- Flask
+- Docker
+- Electron
+```
+### Linux
+```
+- Bash Scripting
+- Arch
+- Ubuntu
+- Red Hat
+```
+### Static Source Code Analysis
+```
+- VisualCodeGrepper
+- SonarQube
+```
+### Reverse Engineering
+```
+- Ghidra
+- IDA
+
+```
+### Web Pentesting
+```
+- Burp Suite
+- OWASP ZAP
+- Gobuster
+- Nikto
+- Nessus
+```
+### Network Pentesting
+```
+- Aircrack-ng
+- Wireshark
+- NetworkMiner
+- Bettercap
+```
+### Operating System Pentesting
+```
+- Nmap
+- Metasploit
+```
+### Password Cracking
+```
+- JohnTheRipper
+- Hashcat
+- Hydra
+```
+### OSINT
+```
+- Maltego
+- Google Dorks
+- Shodan
+- Recon-Ng
+- TheHarvester
+```
 <br><br>
 
 ## **Accomplishments**
@@ -93,7 +153,7 @@ Developing an Automated Penetration Testing software for my FYP.
 ```
 - Nmap, Masscan, Metasploit, JohnTheRipper, Nikto, Gobuster
 ```
-### **Fuzzing and Stress Testing**
+### Fuzzing and Stress Testing
 - Fuzzed and Stress Tested an API.
 - Performed Stack Based Buffer Overflow on an application using python, immunity debugger and mona scripts to deliver payload to the os and gain reverse shell.
 <br><br>
