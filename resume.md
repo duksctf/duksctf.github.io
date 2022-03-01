@@ -168,6 +168,9 @@ Developing an Automated Penetration Testing software for my FYP.
 Organizing events and workshops to create awareness among students.
 
 ### Teaching Assistant
+**Fast Nuces - (Feb 2022 - present) | Islamabad** <br>
+TA for "Vulnerability Assessment & Reverse Engineering" Course.<br>
+
 **Fast Nuces - (Sep 2021 - Jan 2022) | Islamabad** <br>
 TA for "Operating Systems" course.
 
@@ -176,7 +179,7 @@ TA for "Operating Systems" course.
 Utilized this platform to learn and polish my skills in penetration testing.
 
 ### Full Stack Developer 
-**[Smart Livestock](https://www.smartlivestock.ee/) - (Apr 2021 – Oct 2021) | Remote** <br>
+**[Smart Livestock](https://www.smartlivestock.ee/) - (Apr 2021 – Oct 2021) | Estonia** <br>
 Developed and deployed a full IoT system.
 ```
 - Website: WordPress
@@ -225,5 +228,5 @@ Developed and deployed a full IoT system.
 <br>
 
 <div class="date">
-Updated on February 26, 2022
+Updated on March 1, 2022
 </div>
