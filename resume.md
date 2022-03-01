@@ -217,3 +217,7 @@ Developed and deployed a full IoT system.
 - Issued : Sep 2019
 ```
 <br>
+
+<div class="date">
+Updated on February 26, 2022
+</div>
