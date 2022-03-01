@@ -176,8 +176,14 @@ TA for "Operating Systems" course.
 Utilized this platform to learn and polish my skills in penetration testing.
 
 ### Full Stack Developer 
-**CONFIDENTIAL - (Apr 2021 – Oct 2021) | Remote** <br>
+**[Smart Livestock](https://www.smartlivestock.ee/) - (Apr 2021 – Oct 2021) | Remote** <br>
 Developed and deployed a full IoT system.
+```
+- Website: WordPress
+- PWA: Ionic, React, Firebase
+- IoT Client: Microcontroller, Sensors
+- IoT Server: Raspberry Pi, Python
+```
 
 ### Cyber Security Internee
 **Protect Lab - (Jul 2021 - Aug 2021) | Islamabad**
