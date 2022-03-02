@@ -85,6 +85,7 @@ Fast - National University of Computer and Emerging Sciences (NUCES) <br>
 - Burp Suite
 - OWASP ZAP
 - Gobuster
+- WpScan
 - SqlMap
 - Nikto
 - Nessus
