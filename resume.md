@@ -229,5 +229,5 @@ Developed and deployed a full IoT system.
 <br>
 
 <div class="date">
-Updated on March 1, 2022
+Updated on March 2, 2022
 </div>
