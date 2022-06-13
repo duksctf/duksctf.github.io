@@ -21,6 +21,8 @@ An enthusiastic cyber security individual, eager to learn new things, having gre
 Fast - National University of Computer and Emerging Sciences (NUCES) <br>
 2018-2022 | Islamabad, Pakistan
 
+#### Bronze Medal - Fall 2021
+
 #### Dean's List of Honors
 ```
 - Semester Fall 2019
@@ -36,7 +38,6 @@ Fast - National University of Computer and Emerging Sciences (NUCES) <br>
 - Cryptography and Data Security
 - Computer Networking
 - Cloud Security
-- Cloud Computing
 ```
 <br><br>
 
@@ -71,14 +72,23 @@ Fast - National University of Computer and Emerging Sciences (NUCES) <br>
 ```
 ### Static Source Code Analysis
 ```
-- VisualCodeGrepper
+- Snyk
 - SonarQube
 ```
 ### Reverse Engineering
 ```
+- GDB
 - Ghidra
-- IDA
+- Immunity Debugger
 
+```
+### Malware Analysis
+```
+- Yara
+- CFF Explorer
+- Process Monitor
+- HashCalc- 
+- Exeinfo PE
 ```
 ### Web Pentesting
 ```
@@ -140,42 +150,42 @@ Developing an Automated Penetration Testing software for my FYP.
 - Post Exploitation and Privilege Escalator
 - Report Generator
 ```
-#### Sub Modules
-```
-- Hash Cracker
-- Web App Vulnerability Scanner
-```
 #### Tech Stack
 ```
 - Frontend : React JS, Material UI
 - Backend : Golang
-- Deployment : Electron, Docker
+- Deployment : Docker
 ```
 #### Tools Used
 ```
 - Nmap, Masscan, Metasploit, JohnTheRipper, Nikto, Gobuster
 ```
-### Fuzzing and Stress Testing
-- Fuzzed and Stress Tested an API.
-- Performed Stack Based Buffer Overflow on an application using python, immunity debugger and mona scripts to deliver payload to the os and gain reverse shell.
+### End-to-End Encrypted Private Chat Application ([Golang](https://github.com/Noman-Aziz/E2E-Chat-App))
+It uses RSA-3072 bit algorithm for Symmetric Key Exchange.
+It uses AES-128 bit ECB Mode for Secure Communication after AES Key
+Exchange
+It uses SHA-512 algorithm for Hashing
 <br><br>
 
 ## **Experience**
 
 ---
 
+### Jr. Software Security Engineer
+**RNS Solutions - (March 2022 – Present) | Islamabad** <br>
+
 ### Red Team Member
-**Fast CyberSpace Legion - (Oct 2021 – present) | Islamabad** <br>
+**Fast CyberSpace Legion - (Oct 2021 – June 2022) | Islamabad** <br>
 Organizing events and workshops to create awareness among students.
 
 ### Teaching Assistant
-**Fast Nuces - (Feb 2022 - present) | Islamabad** <br>
+**Fast Nuces - (Feb 2022 - June 2022) | Islamabad** <br>
 TA for "Vulnerability Assessment & Reverse Engineering" Course.<br>
 
 **Fast Nuces - (Sep 2021 - Jan 2022) | Islamabad** <br>
 TA for "Operating Systems" course.
 
-### CTF Player | [0x9] | Rooms Completed : 86 
+### CTF Player | [0xA] | Rooms Completed : 76 
 **TryHackMe - (Jun 2021 – Oct 2021)** <br>
 Utilized this platform to learn and polish my skills in penetration testing.
 
@@ -188,10 +198,6 @@ Developed and deployed a full IoT system.
 - IoT Client: Microcontroller, Sensors
 - IoT Server: Raspberry Pi, Python
 ```
-
-### Cyber Security Internee
-**Protect Lab - (Jul 2021 - Aug 2021) | Islamabad**
-<br><br>
 
 ## **Certifications**
 
@@ -229,5 +235,5 @@ Developed and deployed a full IoT system.
 <br>
 
 <div class="date">
-Updated on March 2, 2022
+Updated on June 13, 2022
 </div>
