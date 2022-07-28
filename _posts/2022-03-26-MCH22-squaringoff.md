@@ -52,7 +52,7 @@ to the additive group $\mathbb{Z}/p\mathbb{Z}$ exactly as in the [Okamoto–Uchi
 
 Thus, we run the Pohlig-Hellman algorithm on the remaining factors except $p$ and the second bigger one. The we reconstruct the flag modulus $n$ divided by the missing prime number and it was sufficient to recover the flag completely:
 ```bash
-sage: solve.sage
+$ sage solve.sage
 b'flag{1b8cdf523310e91a3790a5c938707f6b}'
 ```
 
