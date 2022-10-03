@@ -6,7 +6,7 @@ mathjax: true
 date: 2022-10-01
 ---
 
-*A ransomware encrypted PNG files, we retrieve the initial infection program, and use a xor attack to recover the flag.
+*A ransomware encrypted PNG files, we retrieve the initial infection program, and use a xor attack to recover the flag.*
 
 <!--more-->
 
