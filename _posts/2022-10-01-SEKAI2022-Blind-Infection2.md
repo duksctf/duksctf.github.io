@@ -34,7 +34,6 @@ First blood: Yes
 
 ### Solution
 
-We were given a file called [chall.zip](/resources/2022/sekai/blind_infection_1/chall.zip).
 After digging around the file and folder it stand out that the juicy stuf  resides inside the `/home/sekaictf/Pcitures` folder where 4 interesting PNG files are encrypted.
 
 Inside the description, the investigator ask for an open question about when it happend.

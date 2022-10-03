@@ -34,7 +34,6 @@ Validations: 23
 
 ### Solution
 
-We were given a file called [chall.zip](/resources/2022/sekai/blind_infection_1/chall.zip).
 After digging around the file and folder it stand out that the juicy stuf  resides inside the `/home/sekaictf/Documents` folder where a lot of encrypted txt file are.
 
 Inside the description, the customer tell us that he had some "links" as a backup.
