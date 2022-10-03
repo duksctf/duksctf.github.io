@@ -12,7 +12,7 @@ date: 2022-10-01
 
 ### Description
 
-*Consider using a fresh virtual machine for this challenge, as you may risk losing your data. We are not responsible for any damages caused.
+*Consider using a fresh virtual machine for this challenge, as you may risk losing your data. We are not responsible for any damages caused.*
 
 Customer: Please help me... I don’t know what I did but now I can’t access my personal files anymore!
 
@@ -22,7 +22,7 @@ Customer: Yes, I had some links, actually! But they were encrypted as well, so I
 
 Attachment md5sum: 60937547d80207b1b4f2d4174a8d719a
 
-Author: BattleMonger*
+Author: BattleMonger
 
 ### Details
 
