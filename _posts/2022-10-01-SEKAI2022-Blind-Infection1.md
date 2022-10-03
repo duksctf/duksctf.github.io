@@ -57,9 +57,6 @@ https://paste.c-net.org/ElevenRejected
 ```
 
 Opening one of the link shows that there is corelation of the encrypted .txt file and the paste. One of the encrypted txt file was `flag.txt`, so we think that one of the paste should contain the flag.
-We wrote simple [python script]()
-
-
 
 We wrote a simple [python script](/resources/2022/sekai/blind_infection_1/find_paste.py) to extract the different paste and search for a flag.
 
