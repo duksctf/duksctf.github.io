@@ -39,7 +39,7 @@ $$x \equiv g \mod p$$
 
 If so, we have the correct relation: $g^x = x \mod p$ and we must have $x < p$. The chinese remainder theorem (CRT) would give us a positive solution for the previous system modulo $p(p-1)$. It would be rejected by the server. But if we substract $p(p-1)$ to the result of the CRT it would give a negative value still correct.
 
-The final script to automatized the 40 answer is the following:
+The final script to automatized the 40 answers is the following:
 
 ```python
 from sage.all import crt
