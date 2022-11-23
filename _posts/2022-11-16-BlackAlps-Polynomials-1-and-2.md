@@ -54,7 +54,7 @@ def encrypt(pt, e,  n):
     return polyToBits(pt^e)
 ```
 
-We're faced with a modified `RSA` system where $p$ and $q$ are irreducible elements in $GF(2)[x]$ of two random prime degrees. The rest of the system works as a regular `RSA`.
+We're faced with a modified `RSA` system where $p$ and $q$ are irreducible polynomials $\mathrm{GF}(2)$ of two random prime degrees. The rest of the system works as a regular `RSA`.
 
 Unlike the integer factorization problem that is the basis for `RSA` security, it's not a difficult problem to factor a large degree polynomial, `sagemath` actually does it in a second. From that result, it's easy to evaluate the degree of the polynomials `p` and `q` and therefore retrieve `d1` and `d2`. Once we know both of the random primes, we can compute $$\phi(n) = (2^{d_{1}}-1) * (2^{d_{2}}-1)$$. Once we have $\phi(n)$, we can compute $$d = e^{-1} \mod \phi(n)$$.
 
